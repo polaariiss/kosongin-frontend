@@ -49,7 +49,7 @@ export default function DashboardNavbar() {
         <div className="group relative cursor-pointer">
           <div className="w-10 h-10 rounded-full overflow-hidden border-2 border-transparent group-hover:border-[#568F87] transition-all shadow-sm">
             <Image 
-              src="/assets/profile.png" 
+              src="/assets/profile.png"
               alt="User Profile"
               width={40}
               height={40}
