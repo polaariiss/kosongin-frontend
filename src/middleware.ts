@@ -2,13 +2,7 @@ import { NextResponse } from 'next/server';
 import type { NextRequest } from 'next/server';
 
 export function middleware(request: NextRequest) {
-  // Simulasi: kita anggap user belum login
-  const isLoggedIn = request.cookies.get('session'); 
-
-  if (request.nextUrl.pathname.startsWith('/dashboard') && !isLoggedIn) {
-    return NextResponse.redirect(new URL('/login', request.url));
-  }
-
+  // Matikan proteksi sementara dengan langsung mengembalikan NextResponse.next()
   return NextResponse.next();
 }
 
