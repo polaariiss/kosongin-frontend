@@ -719,6 +719,9 @@ video {
 .h-12 {
   height: 3rem;
 }
+.h-2 {
+  height: 0.5rem;
+}
 .h-36 {
   height: 9rem;
 }
@@ -1043,6 +1046,10 @@ video {
 .border-transparent {
   border-color: transparent;
 }
+.bg-\[\#06322b\] {
+  --tw-bg-opacity: 1;
+  background-color: rgb(6 50 43 / var(--tw-bg-opacity));
+}
 .bg-\[\#568F87\] {
   --tw-bg-opacity: 1;
   background-color: rgb(86 143 135 / var(--tw-bg-opacity));
@@ -1091,6 +1098,10 @@ video {
   --tw-bg-opacity: 1;
   background-color: rgb(22 163 74 / var(--tw-bg-opacity));
 }
+.bg-pink-100 {
+  --tw-bg-opacity: 1;
+  background-color: rgb(252 231 243 / var(--tw-bg-opacity));
+}
 .bg-pink-50\/40 {
   background-color: rgb(253 242 248 / 0.4);
 }
@@ -1120,6 +1131,50 @@ video {
 }
 .bg-white\/30 {
   background-color: rgb(255 255 255 / 0.3);
+}
+.bg-\[\#EDEAE8\] {
+  --tw-bg-opacity: 1;
+  background-color: rgb(237 234 232 / var(--tw-bg-opacity));
+}
+.bg-gray-100 {
+  --tw-bg-opacity: 1;
+  background-color: rgb(243 244 246 / var(--tw-bg-opacity));
+}
+.bg-\[\#FCEAEA\] {
+  --tw-bg-opacity: 1;
+  background-color: rgb(252 234 234 / var(--tw-bg-opacity));
+}
+.bg-\[\] {
+  background-color: ;
+}
+.bg-red-200 {
+  --tw-bg-opacity: 1;
+  background-color: rgb(254 202 202 / var(--tw-bg-opacity));
+}
+.bg-\[\#\] {
+  background-color: #;
+}
+.bg-\[\#\#4E827B\] {
+  background-color: ##4E827B;
+}
+.bg-\[\#4E827B\] {
+  --tw-bg-opacity: 1;
+  background-color: rgb(78 130 123 / var(--tw-bg-opacity));
+}
+.bg-\[\#F8F6F4\] {
+  --tw-bg-opacity: 1;
+  background-color: rgb(248 246 244 / var(--tw-bg-opacity));
+}
+.bg-\[\#EEF4F3\] {
+  --tw-bg-opacity: 1;
+  background-color: rgb(238 244 243 / var(--tw-bg-opacity));
+}
+.bg-\[\#FFF\] {
+  --tw-bg-opacity: 1;
+  background-color: rgb(255 255 255 / var(--tw-bg-opacity));
+}
+.bg-\[\#FFFAF\] {
+  background-color: #FFFAF;
 }
 .bg-\[linear-gradient\(45deg\2c \#e5e5e5_25\%\2c transparent_25\%\)\2c linear-gradient\(-45deg\2c \#e5e5e5_25\%\2c transparent_25\%\)\2c linear-gradient\(45deg\2c transparent_75\%\2c \#e5e5e5_75\%\)\2c linear-gradient\(-45deg\2c transparent_75\%\2c \#e5e5e5_75\%\)\] {
   background-image: linear-gradient(45deg,#e5e5e5 25%,transparent 25%),linear-gradient(-45deg,#e5e5e5 25%,transparent 25%),linear-gradient(45deg,transparent 75%,#e5e5e5 75%),linear-gradient(-45deg,transparent 75%,#e5e5e5 75%);
@@ -1194,6 +1249,9 @@ video {
 }
 .p-8 {
   padding: 2rem;
+}
+.p-1 {
+  padding: 0.25rem;
 }
 .px-10 {
   padding-left: 2.5rem;
@@ -1290,6 +1348,10 @@ video {
 .py-80 {
   padding-top: 20rem;
   padding-bottom: 20rem;
+}
+.py-1 {
+  padding-top: 0.25rem;
+  padding-bottom: 0.25rem;
 }
 .pb-0 {
   padding-bottom: 0px;
@@ -1460,6 +1522,23 @@ video {
   --tw-text-opacity: 1;
   color: rgb(255 255 255 / var(--tw-text-opacity));
 }
+.text-\[gray-500\] {
+  color: gray-500;
+}
+.text-\[\] {
+  color: ;
+}
+.text-\[\#\] {
+  color: #;
+}
+.text-\[\#FCEAEA\] {
+  --tw-text-opacity: 1;
+  color: rgb(252 234 234 / var(--tw-text-opacity));
+}
+.text-\[\#4E827B\] {
+  --tw-text-opacity: 1;
+  color: rgb(78 130 123 / var(--tw-text-opacity));
+}
 .underline {
   text-decoration-line: underline;
 }
@@ -1523,6 +1602,9 @@ video {
 }
 .blur-\[140px\] {
   --tw-blur: blur(140px);
+  filter: var(--tw-blur) var(--tw-brightness) var(--tw-contrast) var(--tw-grayscale) var(--tw-hue-rotate) var(--tw-invert) var(--tw-saturate) var(--tw-sepia) var(--tw-drop-shadow);
+}
+.filter {
   filter: var(--tw-blur) var(--tw-brightness) var(--tw-contrast) var(--tw-grayscale) var(--tw-hue-rotate) var(--tw-invert) var(--tw-saturate) var(--tw-sepia) var(--tw-drop-shadow);
 }
 .transition {
@@ -1797,8 +1879,12 @@ video {
 
 @media (min-width: 1024px) {
 
-  .lg\:grid-cols-2 {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
+  .lg\:col-span-2 {
+    grid-column: span 2 / span 2;
+  }
+
+  .lg\:grid-cols-3 {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
   }
 
   .lg\:px-20 {

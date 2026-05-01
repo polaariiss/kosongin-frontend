@@ -3,6 +3,7 @@
 import { useState } from "react";
 import Image from "next/image";
 import { Consumption } from "@/types/consumption";
+import { useRef } from "react";
 
 type Props = {
   onAdd: (data: Consumption) => void;
@@ -33,6 +34,8 @@ export default function ConsumptionForm({ onAdd }: Props) {
   const [preview, setPreview] = useState<string | null>(null);
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
+  
+const dateRef = useRef<HTMLInputElement>(null);
 
   // ================= FILE HANDLER =================
   const handleFile = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -69,7 +72,7 @@ export default function ConsumptionForm({ onAdd }: Props) {
       category: form.category,
       amount: Number(form.amount),
       date: form.date,
-      note: form.note,
+      note: form.note || undefined,
       imageUrl: preview || undefined,
     };
 
@@ -168,12 +171,19 @@ export default function ConsumptionForm({ onAdd }: Props) {
 
         <div>
           <label className="text-sm font-bold">Tanggal</label>
-          <input
-            type="date"
-            className="input mt-2"
-            value={form.date}
-            onChange={(e) => setForm({ ...form, date: e.target.value })}
-          />
+
+          <div
+            onClick={() => dateRef.current?.showPicker?.() || dateRef.current?.click()}
+            className="mt-2 cursor-pointer"
+          >
+            <input
+              ref={dateRef}
+              type="date"
+              className="input w-full"
+              value={form.date}
+              onChange={(e) => setForm({ ...form, date: e.target.value })}
+            />
+          </div>
         </div>
       </div>
 
