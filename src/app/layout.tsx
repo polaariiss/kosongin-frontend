@@ -1,11 +1,10 @@
-import type { Metadata } from "next";
 import "./index.css";
-import Navbar from "@/components/section/Navbar";
+import { Fraunces } from "next/font/google";
 
-export const metadata: Metadata = {
-  title: "Kosongin - Digital Transformation",
-  description: "Digitalisasi dan standarisasi aset digital.",
-};
+const fraunces = Fraunces({
+  subsets: ["latin"],
+  variable: "--font-fraunces",
+});
 
 export default function RootLayout({
   children,
@@ -13,15 +12,9 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="id">
-      <body className="antialiased text-gray-900">
-        <Navbar />
-        <main className="min-h-screen">
-          {children}
-        </main>
-        <footer className="py-10 text-center border-t">
-          <p>© 2026 Kosongin. All rights reserved.</p>
-        </footer>
+    <html lang="en" className={fraunces.variable}>
+      <body className="bg-[#f5f5f3] text-[#0f2e2a]">
+        {children}
       </body>
     </html>
   );

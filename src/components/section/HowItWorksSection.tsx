@@ -1,21 +1,46 @@
-export default function HowItWorksSection() {
-  const steps = ["Upload Dokumen", "Verifikasi Sistem", "Persetujuan", "Selesai"];
-
+export default function HowItWorks() {
   return (
-    <section className="py-16 bg-blue-600 text-white px-6">
-      <div className="max-w-7xl mx-auto text-center">
-        <h2 className="text-3xl font-bold mb-12 text-white">Cara Kerja</h2>
-        <div className="flex flex-wrap justify-center gap-8">
-          {steps.map((step, i) => (
-            <div key={i} className="flex flex-col items-center max-w-[150px]">
-              <div className="w-12 h-12 rounded-full bg-white text-blue-600 flex items-center justify-center font-bold mb-4">
-                {i + 1}
+    <section id="cara" className="py-32 bg-[#f5f5f3]">
+
+      <div className="w-full px-8 md:px-16 lg:px-24">
+
+        <h2 className="font-heading text-4xl md:text-6xl font-bold mb-20">
+          Cara Kerja
+        </h2>
+
+        <div className="grid md:grid-cols-2 gap-20">
+
+          {[
+            { no: "01", title: "Daftar & Buat Akun", desc: "Gratis, cukup nama + email." },
+            { no: "02", title: "Catat Konsumsi Harianmu", desc: "Pilih kategori, isi harga, selesai" },
+            { no: "03", title: "Aktifkan Impulse Shield", desc: "Sebelum belanja, tunda dulu beberapa hari." },
+            { no: "04", title: "Ikuti Challenge & Lihat Progres", desc: "Gabung komunitas. Kebiasaan terbentuk." },
+          ].map((item, i) => (
+            <div key={i}>
+
+              <div className="flex items-center gap-6">
+                <span className="text-6xl font-bold">
+                  {item.no}
+                </span>
+
+                <h3 className="text-3xl font-bold">
+                  {item.title}
+                </h3>
               </div>
-              <p className="font-medium text-white">{step}</p>
+
+              <div className="border-b-2 border-black mt-3 mb-4"></div>
+
+              <p className="ml-24 text-black font-sm text-xl">
+                {item.desc}
+              </p>
+
             </div>
           ))}
+
         </div>
+
       </div>
+
     </section>
   );
 }
