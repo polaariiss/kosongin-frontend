@@ -1,4 +1,4 @@
-// File: C:\Users\User\kosongin-frontend\src\app\dashboard\page.tsx
+// File: C:\Users\Dragon\vscode\kosongin-frontend\src\app\dashboard\page.tsx
 import * as entry from '../../../../src/app/dashboard/page.js'
 import type { ResolvingMetadata, ResolvingViewport } from 'next/dist/lib/metadata/types/metadata-interface.js'
 
