@@ -8,18 +8,35 @@ import { Input } from "@/components/ui/input";
 import { BarChart, Bar, XAxis, ResponsiveContainer, Tooltip } from "recharts";
 import { Plus, ShieldCheck, Users, ArrowRight, ClipboardList, ImageIcon } from "lucide-react";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 
 export default function DashboardPage() {
+  const router = useRouter();
   const [data, setData] = useState<any[]>([]);
   const [userName, setUserName] = useState("User");
 
   useEffect(() => {
+    // 1. ROUTE GUARD: Cek apakah user sudah login (session ada)
+    const userSession = localStorage.getItem("user_session");
+    if (!userSession) {
+      // Jika tidak ada session, tendang ke halaman login
+      router.push("/login");
+      return;
+    }
+
+    // 2. Ambil data konsumsi
     const savedData = localStorage.getItem("consumption_data");
     if (savedData) setData(JSON.parse(savedData));
 
+    // 3. Ambil nama dari pendaftaran (Register)
     const storedName = localStorage.getItem("user_name");
-    if (storedName) setUserName(storedName);
-  }, []);
+    if (storedName) {
+      setUserName(storedName);
+    }
+  }, [router]);
+
+  // Tampilkan loading sebentar jika data sedang dicek (opsional)
+  // Untuk mencegah "flicker" tulisan Hi, User sebelum ganti ke nama asli.
 
   // --- VIEW 1: EMPTY STATE ---
   if (data.length === 0) {
@@ -30,7 +47,10 @@ export default function DashboardPage() {
           <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-pink-50/40 blur-[100px] rounded-full -z-10" />
           <Card className="w-full max-w-xl p-10 md:p-16 bg-white rounded-[32px] shadow-sm border border-gray-100 flex flex-col items-center text-center">
             <div className="text-7xl md:text-8xl mb-8">🌱</div>
-            <h1 className="font-heading text-3xl md:text-4xl font-bold mb-4 text-[#06322b]">Belum ada catatan konsumsi</h1>
+            <h1 className="font-heading text-3xl md:text-4xl font-bold mb-4 text-[#06322b]">
+              Hi, {userName}! 👋
+            </h1>
+            <h2 className="font-heading text-xl md:text-2xl font-bold mb-2 text-[#06322b]">Belum ada catatan konsumsi</h2>
             <p className="text-gray-500 text-sm md:text-base mb-10 max-w-[320px] leading-relaxed">Yuk, mulai catat konsumsi pertamamu hari ini — nggak harus sempurna, yang penting mulai!</p>
             <Button asChild className="bg-[#5E8B7E] hover:bg-[#4d7268] text-[#032119] font-bold px-12 py-7 rounded-[18px] text-lg border-none">
               <Link href="/tracking">Catat Konsumsi Pertama</Link>
@@ -80,10 +100,9 @@ export default function DashboardPage() {
           </div>
         </Card>
 
-        {/* LOWER SECTION: TRACKER & SHIELD (Image 6) */}
+        {/* LOWER SECTION */}
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-          
-          {/* Consumption Tracker Mini Form */}
+          {/* Tracker Form */}
           <Card className="p-8 rounded-[24px] border-gray-100 shadow-sm bg-white">
             <div className="flex items-center gap-2 mb-6">
               <ClipboardList className="w-5 h-5 text-[#06322b]" />
@@ -110,7 +129,7 @@ export default function DashboardPage() {
             </div>
           </Card>
 
-          {/* Impulse Shield Preview */}
+          {/* Impulse Shield */}
           <Card className="p-8 rounded-[24px] border-gray-100 shadow-sm bg-white relative overflow-hidden">
             <div className="flex justify-between items-center mb-6">
               <div className="flex items-center gap-2">
@@ -119,8 +138,6 @@ export default function DashboardPage() {
               </div>
               <ArrowRight className="w-5 h-5 text-gray-300 cursor-pointer" />
             </div>
-            
-            {/* List Item Dummy */}
             <div className="space-y-3">
               <ShieldItem name="Hijack Sandals" category="Fashion" price="Rp 553.520" days="2 hari lagi" />
               <ShieldItem name="Mortosia SAFF & Co." category="Perawatan Diri" price="Rp 225.980" days="5 hari lagi" />
@@ -128,13 +145,12 @@ export default function DashboardPage() {
           </Card>
         </div>
 
-        {/* COMMUNITY CHALLENGE SECTION (Image 6) */}
+        {/* COMMUNITY SECTION */}
         <section className="space-y-6">
           <div className="flex items-center gap-2">
             <Users className="w-5 h-5 text-[#06322b]" />
             <h3 className="text-xl font-bold text-[#06322b]">Community Challenge yang Kamu Ikuti</h3>
           </div>
-          
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
             <ChallengeCard title="Zero Plastic Weekend" tag="Zero Waste" />
             <ChallengeCard title="Belanja Sadar" tag="No Impulse" />

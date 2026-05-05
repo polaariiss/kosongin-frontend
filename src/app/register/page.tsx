@@ -1,58 +1,161 @@
 "use client";
 
+import Navbar from "@/components/section/Navbar";
 import { Button } from "@/components/ui/button";
-import { Card } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
+import { Card } from "@/components/ui/card";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
+import { useState } from "react";
 
 export default function RegisterPage() {
+  const router = useRouter();
+
+  const [formData, setFormData] = useState({
+    name: "",
+    email: "",
+    password: "",
+    confirmPassword: ""
+  });
+
+  const [errors, setErrors] = useState({
+    name: "",
+    email: "",
+    password: "",
+    confirmPassword: ""
+  });
+
+  const handleRegister = (e: React.FormEvent) => {
+    e.preventDefault();
+    
+    let hasError = false;
+    const newErrors = { name: "", email: "", password: "", confirmPassword: "" };
+
+    // Validasi Sederhana
+    if (formData.name.length < 2) {
+      newErrors.name = "Nama lengkap harus diisi.";
+      hasError = true;
+    }
+
+    if (!formData.email.includes("@")) {
+      newErrors.email = "Format email tidak valid.";
+      hasError = true;
+    }
+
+    if (formData.password.length < 6) {
+      newErrors.password = "Password minimal 6 karakter.";
+      hasError = true;
+    }
+
+    if (formData.password !== formData.confirmPassword) {
+      newErrors.confirmPassword = "Konfirmasi password tidak cocok.";
+      hasError = true;
+    }
+
+    if (hasError) {
+      setErrors(newErrors);
+    } else {
+      // Simpan data sederhana ke localStorage
+      localStorage.setItem("user_name", formData.name);
+      localStorage.setItem("user_email", formData.email);
+      
+      router.push("/dashboard");
+    }
+  };
+
   return (
-    <div className="min-h-screen bg-[#fefefe] flex flex-col items-center p-6 relative">
-      <div className="absolute top-1/4 left-1/2 -translate-x-1/2 w-[500px] h-[500px] bg-pink-50/60 blur-[100px] rounded-full -z-10"></div>
-
-      <Card className="w-full max-w-md p-8 md:p-12 bg-white rounded-[32px] shadow-sm border border-gray-50 mt-10">
-        <h1 className="font-heading text-4xl font-bold text-center text-[#06322b] mb-4">Sign Up</h1>
-        <p className="text-gray-500 text-xs text-center mb-8 leading-relaxed px-4">
-          Please enter your name, username, email, and password to register an account.
-        </p>
-
-        <form className="space-y-4">
-          <div className="space-y-1.5">
-            <label className="text-sm font-bold text-[#06322b]">Nama Lengkap</label>
-            <Input type="text" placeholder="Your Name" />
+    <div className="min-h-screen bg-[#f5f5f3] flex flex-col font-sans">
+      <Navbar />
+      
+      <main className="flex-1 flex items-center justify-center p-6">
+        <Card className="w-full max-w-md p-8 bg-white rounded-[32px] shadow-sm border-none">
+          <div className="text-center mb-8">
+            <h1 className="text-4xl font-bold mb-2 text-black">Sign Up</h1>
+            <p className="text-gray-600 text-sm leading-relaxed px-4">
+              Please enter your name, email, and password to register an account.
+            </p>
           </div>
 
-          <div className="space-y-1.5">
-            <label className="text-sm font-bold text-[#06322b]">Email</label>
-            <Input type="email" placeholder="example@gmail.com" />
-          </div>
+          <form onSubmit={handleRegister} className="space-y-5">
+            {/* Nama Lengkap */}
+            <div className="space-y-2 text-left">
+              <label className="text-sm font-bold ml-1">Nama Lengkap</label>
+              <Input 
+                value={formData.name}
+                onChange={(e) => setFormData({...formData, name: e.target.value})}
+                placeholder="Your Name" 
+                className={`rounded-xl py-6 ${errors.name ? "border-red-500 bg-red-50/30" : "border-gray-300 focus:border-[#568F87]"}`}
+              />
+              {errors.name && <p className="text-red-500 text-[10px] mt-1 ml-1 italic font-medium">{errors.name}</p>}
+            </div>
 
-          <div className="space-y-1.5">
-            <label className="text-sm font-bold text-[#06322b]">Password</label>
-            <Input type="password" placeholder="••••••" />
-          </div>
+            {/* Email */}
+            <div className="space-y-2 text-left">
+              <label className="text-sm font-bold ml-1">Email</label>
+              <Input 
+                value={formData.email}
+                onChange={(e) => setFormData({...formData, email: e.target.value})}
+                type="email" 
+                placeholder="example@gmail.com" 
+                className={`rounded-xl py-6 ${errors.email ? "border-red-500 bg-red-50/30" : "border-gray-300 focus:border-[#568F87]"}`}
+              />
+              {errors.email && <p className="text-red-500 text-[10px] mt-1 ml-1 italic font-medium">{errors.email}</p>}
+            </div>
 
-          <div className="space-y-1.5">
-            <label className="text-sm font-bold text-[#06322b]">Konfirmasi Password</label>
-            <Input type="password" placeholder="••••••" />
-          </div>
+            {/* Password */}
+            <div className="space-y-2 text-left">
+              <label className="text-sm font-bold ml-1">Password</label>
+              <Input 
+                value={formData.password}
+                onChange={(e) => setFormData({...formData, password: e.target.value})}
+                type="password" 
+                placeholder="••••••••" 
+                className={`rounded-xl py-6 ${errors.password ? "border-red-500 bg-red-50/30" : "border-gray-300 focus:border-[#568F87]"}`}
+              />
+              {errors.password && <p className="text-red-500 text-[10px] mt-1 ml-1 italic font-medium">{errors.password}</p>}
+            </div>
 
-          <div className="flex items-start gap-2 py-2">
-            <input type="checkbox" className="mt-1 rounded border-gray-300 text-[#5E8B7E] focus:ring-[#5E8B7E]" />
-            <span className="text-[10px] leading-tight text-gray-600 font-medium">
-              Saya bersedia menerima email pengingat harian untuk mencatat konsumsi.
-            </span>
-          </div>
+            {/* Konfirmasi Password */}
+            <div className="space-y-2 text-left">
+              <label className="text-sm font-bold ml-1">Konfirmasi Password</label>
+              <Input 
+                value={formData.confirmPassword}
+                onChange={(e) => setFormData({...formData, confirmPassword: e.target.value})}
+                type="password" 
+                placeholder="••••••••" 
+                className={`rounded-xl py-6 ${errors.confirmPassword ? "border-red-500 bg-red-50/30" : "border-gray-300 focus:border-[#568F87]"}`}
+              />
+              {errors.confirmPassword && <p className="text-red-500 text-[10px] mt-1 ml-1 italic font-medium">{errors.confirmPassword}</p>}
+            </div>
 
-          <Button className="w-full bg-[#5E8B7E] hover:bg-[#4d7268] text-[#032119] font-bold py-7 rounded-2xl border-none mt-2">
-            Register
-          </Button>
-        </form>
-      </Card>
+            {/* Opsi Tambahan (Standard HTML Checkbox) */}
+            <div className="space-y-3 pt-2">
+              <label className="flex items-center gap-2 cursor-pointer text-[11px] text-gray-600">
+                <input type="checkbox" className="rounded border-gray-300" />
+                <span>Remember me</span>
+              </label>
+              <label className="flex items-start gap-2 cursor-pointer text-[11px] text-gray-600 leading-tight">
+                <input type="checkbox" className="mt-0.5 rounded border-gray-300" />
+                <span>Saya bersedia menerima email pengingat harian untuk mencatat konsumsi.</span>
+              </label>
+            </div>
 
-      <p className="mt-6 text-sm text-gray-500 mb-10">
-        Sudah punya akun? <Link href="/login" className="font-bold text-[#06322b] hover:underline">Log in</Link>
-      </p>
+            <Button 
+              type="submit" 
+              className="w-full bg-[#568F87] hover:bg-[#4a7a73] text-white font-bold py-7 rounded-xl text-lg transition-all active:scale-95 shadow-md border-none"
+            >
+              Register
+            </Button>
+          </form>
+
+          <p className="text-center mt-8 text-sm text-gray-600">
+            Sudah punya akun?{" "}
+            <Link href="/login" className="font-bold underline text-[#568F87] hover:opacity-80">
+              Log in
+            </Link>
+          </p>
+        </Card>
+      </main>
     </div>
   );
 }
