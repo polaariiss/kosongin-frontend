@@ -4,157 +4,149 @@ import React, { useState, useEffect } from "react";
 import LoginNavbar from "@/components/section/LoginNavbar";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
 import { BarChart, Bar, XAxis, ResponsiveContainer, Tooltip } from "recharts";
-import { Plus, ShieldCheck, Users, ArrowRight, ClipboardList, ImageIcon } from "lucide-react";
+import { Plus, ShieldCheck, Users, ArrowRight, ClipboardList, ImageIcon, Target } from "lucide-react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 
 export default function DashboardPage() {
   const router = useRouter();
-  const [data, setData] = useState<any[]>([]);
+  const [consumptionData, setConsumptionData] = useState<any[]>([]);
+  const [shieldData, setShieldData] = useState<any[]>([]);
+  const [joinedChallenges, setJoinedChallenges] = useState<number[]>([]);
   const [userName, setUserName] = useState("User");
 
+  // Data Referensi Tantangan (Harus sama dengan di Page Komunitas)
+  const ALL_CHALLENGES = [
+    { id: 1, title: "Zero Plastic Weekend", tag: "Zero Waste" },
+    { id: 2, title: "Belanja Sadar", tag: "No Impulse" },
+    { id: 3, title: "Selasa Kendalikan Emisi", tag: "Zero Waste" },
+  ];
+
   useEffect(() => {
-    // 1. ROUTE GUARD: Cek apakah user sudah login (session ada)
     const userSession = localStorage.getItem("user_session");
     if (!userSession) {
-      // Jika tidak ada session, tendang ke halaman login
-      router.push("/login");
+      router.replace("/login");
       return;
     }
 
-    // 2. Ambil data konsumsi
-    const savedData = localStorage.getItem("consumption_data");
-    if (savedData) setData(JSON.parse(savedData));
+    setUserName(localStorage.getItem("user_name") || "User");
+    
+    // Load Data Tracking
+    const savedCons = localStorage.getItem("consumption_data");
+    if (savedCons) setConsumptionData(JSON.parse(savedCons));
 
-    // 3. Ambil nama dari pendaftaran (Register)
-    const storedName = localStorage.getItem("user_name");
-    if (storedName) {
-      setUserName(storedName);
+    // Load Data Shield (Hanya yang statusnya Waiting)
+    const savedShield = localStorage.getItem("shield_data");
+    if (savedShield) {
+      const parsed = JSON.parse(savedShield);
+      setShieldData(parsed.filter((item: any) => item.status === "Waiting"));
     }
+
+    // Load Data Challenges
+    const savedChall = localStorage.getItem("joined_challenges");
+    if (savedChall) setJoinedChallenges(JSON.parse(savedChall));
   }, [router]);
 
-  // Tampilkan loading sebentar jika data sedang dicek (opsional)
-  // Untuk mencegah "flicker" tulisan Hi, User sebelum ganti ke nama asli.
+  const totalExpense = consumptionData.reduce((acc, curr) => acc + Number(curr.amount || 0), 0);
 
-  // --- VIEW 1: EMPTY STATE ---
-  if (data.length === 0) {
-    return (
-      <div className="min-h-screen bg-[#fefefe] flex flex-col font-sans overflow-hidden">
-        <LoginNavbar />
-        <main className="flex-1 flex items-center justify-center p-6 relative">
-          <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-pink-50/40 blur-[100px] rounded-full -z-10" />
-          <Card className="w-full max-w-xl p-10 md:p-16 bg-white rounded-[32px] shadow-sm border border-gray-100 flex flex-col items-center text-center">
-            <div className="text-7xl md:text-8xl mb-8">🌱</div>
-            <h1 className="font-heading text-3xl md:text-4xl font-bold mb-4 text-[#06322b]">
-              Hi, {userName}! 👋
-            </h1>
-            <h2 className="font-heading text-xl md:text-2xl font-bold mb-2 text-[#06322b]">Belum ada catatan konsumsi</h2>
-            <p className="text-gray-500 text-sm md:text-base mb-10 max-w-[320px] leading-relaxed">Yuk, mulai catat konsumsi pertamamu hari ini — nggak harus sempurna, yang penting mulai!</p>
-            <Button asChild className="bg-[#5E8B7E] hover:bg-[#4d7268] text-[#032119] font-bold px-12 py-7 rounded-[18px] text-lg border-none">
-              <Link href="/tracking">Catat Konsumsi Pertama</Link>
-            </Button>
-          </Card>
-        </main>
-      </div>
-    );
-  }
-
-  // --- VIEW 2: FULL DASHBOARD ---
   return (
     <div className="min-h-screen bg-[#FEFEFE] flex flex-col font-sans pb-20">
       <LoginNavbar />
+      
       <main className="px-6 md:px-12 lg:px-20 mt-10 space-y-10 animate-in fade-in duration-700">
         
-        {/* HEADER */}
-        <div className="flex justify-between items-end">
+        {/* HEADER SECTION */}
+        <div className="flex flex-col md:flex-row justify-between items-start md:items-end gap-4">
           <div>
             <h1 className="text-4xl font-heading font-bold text-[#06322b]">Hi, {userName}! 👋</h1>
-            <p className="text-gray-500 mt-1">Hari ini kamu konsumsi apa saja?</p>
+            <p className="text-gray-400 mt-1">Ini ringkasan perjalanan hematmu hari ini.</p>
           </div>
-          <Button asChild className="bg-[#5E8B7E] text-[#032119] font-bold rounded-xl hidden md:flex">
-            <Link href="/tracking"><Plus className="w-4 h-4 mr-2" /> Tambah Catatan</Link>
+          <Button asChild className="bg-[#5E8B7E] hover:bg-[#4d7268] text-[#032119] font-bold rounded-2xl px-6 py-6 shadow-sm border-none">
+            <Link href="/tracking"><Plus className="w-5 h-5 mr-2" /> Catat Pengeluaran</Link>
           </Button>
         </div>
 
-        {/* SUMMARY CARDS */}
-        <section className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-          <StatCard title="Item Tercatat" value={data.length.toString()} sub="Update terbaru" />
-          <StatCard title="Kategori Terbanyak" value="Lainnya" sub="Berdasarkan data" />
-          <StatCard title="Streak" value="1 🔥" sub="Ayo pertahankan!" isStreak />
-          <StatCard title="Total" value="Rp 0" sub="Minggu ini" />
+        {/* STATS SUMMARY */}
+        <section className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+          <StatCard title="Total Belanja" value={`Rp ${totalExpense.toLocaleString('id-ID')}`} sub="Periode ini" color="bg-pink-50" />
+          <StatCard title="Impulse Shield" value={shieldData.length.toString()} sub="Item ditunda" color="bg-teal-50" />
+          <StatCard title="Challenge" value={joinedChallenges.length.toString()} sub="Sedang diikuti" color="bg-blue-50" />
+          <StatCard title="Daily Tracking" value={consumptionData.length.toString()} sub="Catatan aktif" color="bg-orange-50" />
         </section>
 
-        {/* GRAFIK UTAMA */}
-        <Card className="p-6 rounded-[24px] border-gray-100 shadow-sm bg-white">
-          <h3 className="font-bold text-[#06322b] mb-6 text-lg">Grafik konsumsi harian (Rp)</h3>
-          <div className="h-[250px]">
-            <ResponsiveContainer width="100%" height="100%">
-              <BarChart data={data}>
-                <XAxis dataKey="date" hide />
-                <Tooltip cursor={{fill: '#f9f9f9'}} contentStyle={{borderRadius: '12px', border: 'none', boxShadow: '0 4px 6px -1px rgb(0 0 0 / 0.1)'}} />
-                <Bar dataKey="amount" fill="#F7C8C9" radius={[6, 6, 6, 6]} barSize={50} />
-              </BarChart>
-            </ResponsiveContainer>
-          </div>
-        </Card>
-
-        {/* LOWER SECTION */}
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-          {/* Tracker Form */}
-          <Card className="p-8 rounded-[24px] border-gray-100 shadow-sm bg-white">
-            <div className="flex items-center gap-2 mb-6">
-              <ClipboardList className="w-5 h-5 text-[#06322b]" />
-              <h3 className="font-bold text-[#06322b] text-lg">Consumption Tracker</h3>
-            </div>
-            <div className="space-y-4">
-              <div className="space-y-1">
-                <label className="text-xs font-bold text-[#06322b]">Nama Item</label>
-                <Input placeholder="Contoh: Adidas Cheongsam, Hirono..." className="rounded-xl border-gray-200" />
-              </div>
-              <div className="grid grid-cols-2 gap-4">
-                <div className="space-y-1">
-                  <label className="text-xs font-bold text-[#06322b]">Harga (Rp)</label>
-                  <Input type="number" placeholder="0" className="rounded-xl border-gray-200" />
-                </div>
-                <div className="space-y-1">
-                  <label className="text-xs font-bold text-[#06322b]">Tanggal</label>
-                  <Input type="date" className="rounded-xl border-gray-200" />
-                </div>
-              </div>
-              <Button asChild className="w-full bg-[#5E8B7E] hover:bg-[#4d7268] text-[#032119] font-bold py-6 rounded-xl border-none mt-2">
-                <Link href="/tracking">Simpan</Link>
-              </Button>
+        {/* MIDDLE SECTION: CHART & SHIELD PREVIEW */}
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+          {/* Grafik Harian */}
+          <Card className="lg:col-span-2 p-8 rounded-[32px] border-gray-100 shadow-sm bg-white">
+            <h3 className="font-bold text-[#06322b] mb-8 flex items-center gap-2 text-lg">
+              <Target className="w-5 h-5 text-[#5E8B7E]" /> Tren Konsumsi
+            </h3>
+            <div className="h-[250px] w-full">
+              <ResponsiveContainer width="100%" height="100%">
+                <BarChart data={consumptionData}>
+                  <XAxis dataKey="date" hide />
+                  <Tooltip cursor={{fill: '#f9f9f9'}} contentStyle={{borderRadius: '16px', border: 'none', boxShadow: '0 10px 15px -3px rgba(0,0,0,0.1)'}} />
+                  <Bar dataKey="amount" fill="#9bbab1" radius={[8, 8, 8, 8]} barSize={40} />
+                </BarChart>
+              </ResponsiveContainer>
             </div>
           </Card>
 
-          {/* Impulse Shield */}
-          <Card className="p-8 rounded-[24px] border-gray-100 shadow-sm bg-white relative overflow-hidden">
+          {/* Impulse Shield Mini List */}
+          <Card className="p-8 rounded-[32px] border-gray-100 shadow-sm bg-white border-t-4 border-t-[#5E8B7E]">
             <div className="flex justify-between items-center mb-6">
-              <div className="flex items-center gap-2">
-                <ShieldCheck className="w-5 h-5 text-[#06322b]" />
-                <h3 className="font-bold text-[#06322b] text-lg">Impulse Shield</h3>
-              </div>
-              <ArrowRight className="w-5 h-5 text-gray-300 cursor-pointer" />
+              <h3 className="font-bold text-[#06322b] text-lg flex items-center gap-2">
+                <ShieldCheck className="w-5 h-5" /> Waiting List
+              </h3>
+              <Link href="/shield" className="text-[10px] font-bold text-[#5E8B7E] uppercase hover:underline">Lihat Semua</Link>
             </div>
-            <div className="space-y-3">
-              <ShieldItem name="Hijack Sandals" category="Fashion" price="Rp 553.520" days="2 hari lagi" />
-              <ShieldItem name="Mortosia SAFF & Co." category="Perawatan Diri" price="Rp 225.980" days="5 hari lagi" />
+            
+            <div className="space-y-4">
+              {shieldData.length > 0 ? (
+                shieldData.slice(0, 3).map((item, idx) => (
+                  <div key={idx} className="p-4 bg-[#F8FAFA] rounded-[20px] border border-gray-50 group hover:border-[#5E8B7E] transition-all">
+                    <p className="text-sm font-bold text-[#06322b] truncate">{item.itemName}</p>
+                    <div className="flex justify-between items-center mt-1">
+                      <p className="text-[10px] text-gray-400">Rp {Number(item.price).toLocaleString('id-ID')}</p>
+                      <span className="text-[9px] font-bold text-red-500 bg-red-50 px-2 py-0.5 rounded-full">{item.duration}</span>
+                    </div>
+                  </div>
+                ))
+              ) : (
+                <div className="py-10 text-center space-y-3">
+                  <ClipboardList className="w-8 h-8 text-gray-200 mx-auto" />
+                  <p className="text-xs text-gray-400 italic">Belum ada barang ditunda.</p>
+                </div>
+              )}
             </div>
           </Card>
         </div>
 
-        {/* COMMUNITY SECTION */}
+        {/* BOTTOM SECTION: COMMUNITY CHALLENGES */}
         <section className="space-y-6">
-          <div className="flex items-center gap-2">
-            <Users className="w-5 h-5 text-[#06322b]" />
-            <h3 className="text-xl font-bold text-[#06322b]">Community Challenge yang Kamu Ikuti</h3>
+          <div className="flex justify-between items-center">
+            <h3 className="text-xl font-bold text-[#06322b] flex items-center gap-2">
+              <Users className="w-6 h-6" /> Tantangan Aktifmu
+            </h3>
+            <Button variant="ghost" asChild className="text-[#5E8B7E] font-bold text-sm">
+              <Link href="/komunitas">Cari Tantangan Baru <ArrowRight className="w-4 h-4 ml-1" /></Link>
+            </Button>
           </div>
+          
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-            <ChallengeCard title="Zero Plastic Weekend" tag="Zero Waste" />
-            <ChallengeCard title="Belanja Sadar" tag="No Impulse" />
-            <ChallengeCard title="Selasa Kendalikan Emisi" tag="Zero Waste" />
+            {joinedChallenges.length > 0 ? (
+              ALL_CHALLENGES.filter(c => joinedChallenges.includes(c.id)).map((item) => (
+                <ChallengePreviewCard key={item.id} title={item.title} tag={item.tag} />
+              ))
+            ) : (
+              <Card className="col-span-full p-10 rounded-[32px] border-dashed border-2 border-gray-100 flex flex-col items-center bg-gray-50/20">
+                <p className="text-gray-400 text-sm mb-4 italic">Kamu belum mengikuti tantangan komunitas apapun.</p>
+                <Button asChild variant="outline" className="rounded-xl border-gray-200 text-xs font-bold">
+                  <Link href="/komunitas">Lihat Semua Challenge</Link>
+                </Button>
+              </Card>
+            )}
           </div>
         </section>
       </main>
@@ -164,48 +156,31 @@ export default function DashboardPage() {
 
 // --- SUB-KOMPONEN ---
 
-function StatCard({ title, value, sub, isStreak }: any) {
+function StatCard({ title, value, sub, color }: any) {
   return (
-    <Card className="p-5 rounded-[20px] border-gray-50 shadow-sm bg-white">
-      <p className="text-[10px] font-bold text-gray-400 uppercase tracking-wider">{title}</p>
-      <p className="text-2xl font-bold text-[#06322b] my-1">{value}</p>
-      <p className={`text-[10px] font-medium ${isStreak ? 'text-orange-500' : 'text-[#568F87]'}`}>{sub}</p>
+    <Card className={`p-6 rounded-[28px] border-none shadow-sm ${color} transition-transform hover:scale-[1.02]`}>
+      <p className="text-[10px] font-bold text-gray-500 uppercase tracking-widest">{title}</p>
+      <p className="text-2xl font-bold text-[#06322b] mt-2 mb-1">{value}</p>
+      <p className="text-[10px] font-medium text-gray-400">{sub}</p>
     </Card>
   );
 }
 
-function ShieldItem({ name, category, price, days }: any) {
+function ChallengePreviewCard({ title, tag }: any) {
   return (
-    <div className="flex justify-between items-center p-4 bg-[#F8FAFA] rounded-2xl border border-gray-100">
-      <div>
-        <p className="text-sm font-bold text-[#06322b]">{name}</p>
-        <p className="text-[10px] text-gray-500">{category} - {price}</p>
+    <Card className="p-6 rounded-[32px] border-gray-100 shadow-sm bg-white group">
+      <div className="aspect-[16/9] bg-[#F8FAFA] rounded-[24px] mb-5 flex items-center justify-center text-gray-200 border border-gray-50 group-hover:bg-[#f2f6f5] transition-colors">
+        <ImageIcon className="w-10 h-10" />
       </div>
-      <div className="text-right">
-        <p className="text-[10px] font-bold text-red-400 mb-2">{days}</p>
-        <div className="flex gap-2">
-          <button className="text-[9px] font-bold px-2 py-1 border border-gray-300 rounded-md bg-white">Batalkan</button>
-          <button className="text-[9px] font-bold px-2 py-1 bg-white border border-gray-300 rounded-md">Tetap Beli</button>
-        </div>
+      <div className="space-y-3">
+        <span className={`text-[9px] font-bold px-3 py-1 rounded-full border ${tag === 'Zero Waste' ? 'text-green-600 border-green-100 bg-green-50' : 'text-red-600 border-red-100 bg-red-50'}`}>
+          {tag}
+        </span>
+        <h4 className="font-bold text-[#06322b] text-md line-clamp-1">{title}</h4>
+        <Button asChild className="w-full bg-[#EDEAE8] hover:bg-[#e0ddd9] text-gray-700 font-bold py-5 rounded-xl text-[10px] border-none">
+          <Link href="/komunitas">Detail Progress</Link>
+        </Button>
       </div>
-    </div>
-  );
-}
-
-function ChallengeCard({ title, tag }: any) {
-  return (
-    <Card className="p-4 rounded-[24px] border-gray-100 shadow-sm bg-white">
-      <div className="aspect-video bg-gray-50 rounded-[18px] mb-4 flex items-center justify-center text-gray-300 border border-dashed border-gray-200">
-        <ImageIcon className="w-8 h-8" />
-      </div>
-      <span className={`text-[9px] font-bold px-2 py-1 rounded-full border ${tag === 'Zero Waste' ? 'text-green-600 border-green-100 bg-green-50' : 'text-red-600 border-red-100 bg-red-50'}`}>
-        {tag}
-      </span>
-      <h4 className="font-bold text-[#06322b] mt-3 mb-1">{title}</h4>
-      <p className="text-[10px] text-gray-400 mb-4 font-medium">Deskripsi tantangan...</p>
-      <Button className="w-full bg-[#5E8B7E] text-[#032119] font-bold py-5 rounded-xl text-xs hover:bg-[#4d7268]">
-        Lihat Detail <ArrowRight className="w-3 h-3 ml-2" />
-      </Button>
     </Card>
   );
 }

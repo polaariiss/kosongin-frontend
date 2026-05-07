@@ -7,7 +7,6 @@ import { Card } from "@/components/ui/card";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useState, useEffect } from "react";
-// Import icon mata dari lucide-react
 import { Eye, EyeOff } from "lucide-react";
 
 export default function LoginPage() {
@@ -15,9 +14,10 @@ export default function LoginPage() {
   
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [showPassword, setShowPassword] = useState(false); // State baru untuk toggle
+  const [showPassword, setShowPassword] = useState(false);
   const [errors, setErrors] = useState({ email: "", password: "" });
 
+  // Reset session saat masuk ke halaman login
   useEffect(() => {
     localStorage.removeItem("user_session");
   }, []);
@@ -28,24 +28,37 @@ export default function LoginPage() {
     let hasError = false;
     const newErrors = { email: "", password: "" };
 
+    // Ambil data yang tersimpan dari pendaftaran
     const registeredEmail = localStorage.getItem("user_email");
+    const registeredPassword = localStorage.getItem("user_password");
 
-    if (!email.includes("@")) {
+    // 1. Validasi Keberadaan Akun
+    if (!email) {
+      newErrors.email = "Email wajib diisi.";
+      hasError = true;
+    } else if (!email.includes("@")) {
       newErrors.email = "Format email tidak valid.";
       hasError = true;
     } else if (registeredEmail && email !== registeredEmail) {
-      newErrors.email = "Email tidak terdaftar. Silakan daftar akun baru.";
+      // Feedback jika email tidak ditemukan di data pendaftaran
+      newErrors.email = "Akun tidak ditemukan. Silakan daftar terlebih dahulu.";
       hasError = true;
     }
 
-    if (password.length < 1) {
+    // 2. Validasi Password
+    if (!password) {
       newErrors.password = "Password wajib diisi.";
+      hasError = true;
+    } else if (registeredPassword && password !== registeredPassword) {
+      // Feedback jika password tidak cocok dengan yang didaftarkan
+      newErrors.password = "Password salah. Coba periksa kembali.";
       hasError = true;
     }
 
     if (hasError) {
       setErrors(newErrors);
     } else {
+      // Login Berhasil
       setErrors({ email: "", password: "" });
       localStorage.setItem("user_session", "true");
       router.push("/dashboard"); 
@@ -66,7 +79,6 @@ export default function LoginPage() {
           </div>
 
           <form onSubmit={handleLogin} className="space-y-6">
-            {/* Input Email tetap sama */}
             <div className="space-y-2 text-left">
               <label className="text-sm font-bold ml-1 text-[#1A3C34]">Email</label>
               <Input 
@@ -75,27 +87,32 @@ export default function LoginPage() {
                 type="email" 
                 placeholder="example@gmail.com" 
                 className={`rounded-xl py-6 transition-all ${
-                  errors.email ? "border-red-500 ring-1 ring-red-500 bg-red-50/30" : "border-gray-300 focus:border-[#568F87]"
+                  errors.email 
+                    ? "border-red-500 ring-1 ring-red-500 bg-red-50/30" 
+                    : "border-gray-300 focus:border-[#568F87]"
                 }`}
               />
-              {errors.email && <p className="text-red-500 text-[10px] mt-1 ml-1 font-medium italic">{errors.email}</p>}
+              {errors.email && (
+                <p className="text-red-500 text-[10px] mt-1 ml-1 font-medium italic">
+                  {errors.email}
+                </p>
+              )}
             </div>
             
-            {/* Input Password dengan fitur Show/Hide */}
             <div className="space-y-2 text-left">
               <label className="text-sm font-bold ml-1 text-[#1A3C34]">Password</label>
               <div className="relative">
                 <Input 
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
-                  // Type berubah dinamis berdasarkan state showPassword
                   type={showPassword ? "text" : "password"} 
                   placeholder="••••••••" 
                   className={`rounded-xl py-6 pr-12 transition-all ${
-                    errors.password ? "border-red-500 ring-1 ring-red-500 bg-red-50/30" : "border-gray-300 focus:border-[#568F87]"
+                    errors.password 
+                      ? "border-red-500 ring-1 ring-red-500 bg-red-50/30" 
+                      : "border-gray-300 focus:border-[#568F87]"
                   }`}
                 />
-                {/* Tombol Icon Mata */}
                 <button
                   type="button"
                   onClick={() => setShowPassword(!showPassword)}
@@ -104,7 +121,11 @@ export default function LoginPage() {
                   {showPassword ? <EyeOff size={20} /> : <Eye size={20} />}
                 </button>
               </div>
-              {errors.password && <p className="text-red-500 text-[10px] mt-1 ml-1 font-medium italic">{errors.password}</p>}
+              {errors.password && (
+                <p className="text-red-500 text-[10px] mt-1 ml-1 font-medium italic">
+                  {errors.password}
+                </p>
+              )}
             </div>
 
             <div className="flex items-center justify-between text-sm">
@@ -112,7 +133,10 @@ export default function LoginPage() {
                 <input type="checkbox" className="rounded border-gray-300 accent-[#568F87]" />
                 <span className="text-xs">Remember me</span>
               </label>
-              <Link href="/forgot-password" className="font-bold underline text-xs text-black hover:text-[#568F87]">
+              <Link 
+                href="/forgot-password" 
+                className="font-bold underline text-xs text-black hover:text-[#568F87]"
+              >
                 Lupa password?
               </Link>
             </div>
