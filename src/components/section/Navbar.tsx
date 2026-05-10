@@ -58,6 +58,7 @@ export default function Navbar() {
                 Daftar
               </Link>
             )}
+
           </nav>
 
           {/* BUTTON / PROFILE */}
@@ -65,9 +66,11 @@ export default function Navbar() {
             <ProfileDropdown />
           ) : (
             <Link href="/login">
+
               <button className="bg-[#568F87] hover:bg-[#4a7a73] text-white text-sm font-semibold px-6 py-3 rounded-xl transition-all active:scale-95">
                 Mulai Sekarang
               </button>
+
             </Link>
           )}
 
@@ -75,7 +78,7 @@ export default function Navbar() {
 
         {/* MOBILE BUTTON */}
         <button
-          className="md:hidden"
+          className="md:hidden ml-auto"
           onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
         >
           {isMobileMenuOpen ? (
@@ -89,9 +92,10 @@ export default function Navbar() {
 
       {/* MOBILE MENU */}
       {isMobileMenuOpen && (
+
         <div className="md:hidden absolute top-full left-0 w-full border-t border-gray-100 bg-white px-6 py-6 shadow-lg z-50">
 
-          <nav className="flex flex-col gap-6">
+          <nav className="flex flex-col items-end gap-6 text-right">
 
             <Link
               href="#fitur"
@@ -127,17 +131,27 @@ export default function Navbar() {
               </Link>
             )}
 
+            {/* MOBILE LOGIN BUTTON */}
             {!isLoggedIn && (
-              <Link href="/login">
-                <button className="w-full bg-[#568F87] text-white py-4 rounded-xl font-semibold">
-                  Mulai Sekarang
-                </button>
-              </Link>
+
+              <div className="flex justify-center pt-2">
+
+                <Link href="/login">
+
+                  <button className="w-fit px-4 py-2 bg-[#568F87] hover:bg-[#4a7a73] text-white rounded-xl font-semibold transition-all active:scale-95">
+                    Mulai Sekarang
+                  </button>
+
+                </Link>
+
+              </div>
+
             )}
 
           </nav>
 
         </div>
+
       )}
 
     </header>
