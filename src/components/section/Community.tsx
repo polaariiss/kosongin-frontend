@@ -1,4 +1,5 @@
 import Image from "next/image";
+import Link from "next/link";
 
 export default function Community() {
   return (
@@ -63,25 +64,20 @@ export default function Community() {
               {/* CONTENT */}
               <div className="p-5 flex flex-col flex-1">
 
-                {/* TAG */}
                 <span className="inline-block border border-[#568F87] text-[#568F87] px-4 py-2 rounded-full text-sm md:text-base w-fit">
                   Zero Waste
                 </span>
 
-                {/* TITLE */}
                 <h3 className="mt-5 text-2xl md:text-2xl font-bold">
                   {item.title}
                 </h3>
 
-                {/* DESC */}
                 <p className="text-base md:text-lg text-black mt-6 leading-relaxed">
                   {item.desc}
                 </p>
 
-                {/* BOTTOM */}
                 <div className="mt-auto pt-8">
 
-                  {/* INFO */}
                   <div className="flex items-center gap-2 text-base md:text-lg text-gray-600 mb-4">
 
                     <Image
@@ -100,23 +96,22 @@ export default function Community() {
 
                   </div>
 
-                  {/* BUTTON */}
-                  <button className="ml-auto w-fit bg-[#5c8f86] hover:bg-[#4a7a73] text-white font-semibold px-6 py-3 rounded-xl text-sm md:text-base transition">
+                  <Link href="/login">
 
-                    <div className="flex items-center justify-center gap-2">
+                    <button className="ml-auto w-fit bg-[#5c8f86] hover:bg-[#4a7a73] text-white font-semibold px-6 py-3 rounded-xl text-sm md:text-base transition">
+                      <div className="flex items-center justify-center gap-2">
+                        <span>Ikuti Challenge</span>
 
-                      <span>Ikuti Challenge</span>
+                        <Image
+                          src="/arrow.png"
+                          alt="arrow"
+                          width={14}
+                          height={14}
+                        />
 
-                      <Image
-                        src="/arrow.png"
-                        alt="arrow"
-                        width={14}
-                        height={14}
-                      />
-
-                    </div>
-
-                  </button>
+                      </div>
+                    </button>
+                  </Link>
 
                 </div>
 

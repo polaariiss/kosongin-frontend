@@ -28,7 +28,6 @@ export default function About() {
           className="mx-auto mb-12"
         />
 
-        {/* H2 DESKTOP */}
         <h2 className="hidden md:block text-center text-3xl md:text-4xl font-heading font-bold">
           Platform “rem digital”{" "}
           <span className="text-[#3D6660]">
@@ -36,7 +35,6 @@ export default function About() {
           </span>
         </h2>
 
-        {/* H2 MOBILE */}
         <h2 className="block md:hidden text-center text-2xl font-heading font-bold leading-tight">
           Platform “rem digital”
           <br />
@@ -45,10 +43,8 @@ export default function About() {
           </span>
         </h2>
 
-        {/* PARAGRAPH */}
         <div className="mt-60 w-full px-2 md:px-6 lg:px-10 text-xl leading-relaxed">
 
-          {/* kiri */}
           <p className="max-w-2xl">
             Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
             eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim
@@ -56,7 +52,6 @@ export default function About() {
             aliquip ex ea commodo consequat.
           </p>
 
-          {/* kanan */}
           <p className="max-w-2xl md:ml-auto md:mt-32 mt-12">
             Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
             eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim

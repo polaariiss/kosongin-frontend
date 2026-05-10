@@ -1,4 +1,5 @@
 import Image from "next/image";
+import Link from "next/link";
 
 export default function Footer() {
   return (
@@ -9,17 +10,21 @@ export default function Footer() {
         {/* LOGO */}
         <div>
 
-          <Image
-            src="/logo1.svg"
-            alt="Logo"
-            width={60}
-            height={60}
-            className="mb-6"
-          />
+          <Link href="/" className="group">
 
-          <h1 className="font-bold font-heading text-3xl md:text-4xl">
-            Kosongin
-          </h1>
+            <Image
+              src="/logo1.svg"
+              alt="Logo"
+              width={60}
+              height={60}
+              className="mb-6 transition-transform duration-300 group-hover:scale-105"
+            />
+
+            <h1 className="font-bold font-heading text-3xl md:text-4xl transition-colors duration-300 group-hover:text-[#568F87]">
+              Kosongin
+            </h1>
+
+          </Link>
 
         </div>
 
@@ -30,21 +35,21 @@ export default function Footer() {
             Home
           </p>
 
-          <p className="text-black text-base md:text-lg mb-4">
-            Fitur
-          </p>
+          <div className="flex flex-col gap-4">
 
-          <p className="text-black text-base md:text-lg mb-4">
-            Cara Kerja
-          </p>
+            <Link href="#fitur" className="text-black text-base md:text-lg hover:text-[#568F87] transition-colors">
+              Fitur
+            </Link>
 
-          <p className="text-black text-base md:text-lg mb-4">
-            Komunitas
-          </p>
+            <Link href="#cara-kerja" className="text-black text-base md:text-lg hover:text-[#568F87] transition-colors">
+              Cara Kerja
+            </Link>
 
-          <p className="text-black text-base md:text-lg">
-            Daftar
-          </p>
+            <Link href="#komunitas" className="text-black text-base md:text-lg hover:text-[#568F87] transition-colors">
+              Komunitas
+            </Link>
+
+          </div>
 
         </div>
 
@@ -55,17 +60,21 @@ export default function Footer() {
             Contact Us
           </p>
 
-          <p className="text-black text-base md:text-lg mb-4">
-            Email
-          </p>
+          <div className="flex flex-col gap-4">
 
-          <p className="text-black text-base md:text-lg mb-4">
-            Instagram
-          </p>
+            <Link href="https://www.gmail.com" className="text-black text-base md:text-lg hover:text-[#568F87] transition-colors">
+              Email
+            </Link>
 
-          <p className="text-black text-base md:text-lg">
-            LinkedIn
-          </p>
+            <Link href="https://www.instagram.com" className="text-black text-base md:text-lg hover:text-[#568F87] transition-colors">
+              Instagram
+            </Link>
+
+            <Link href="https://www.linkedin.com" className="text-black text-base md:text-lg hover:text-[#568F87] transition-colors">
+              LinkedIn
+            </Link>
+
+          </div>
 
         </div>
 
@@ -76,13 +85,17 @@ export default function Footer() {
             Legal
           </p>
 
-          <p className="text-black text-base md:text-lg mb-4">
-            Privacy Policy
-          </p>
+          <div className="flex flex-col gap-4">
 
-          <p className="text-black text-base md:text-lg">
-            Terms of Service
-          </p>
+            <Link href="/" className="text-black text-base md:text-lg hover:text-[#568F87] transition-colors">
+              Privacy Policy
+            </Link>
+
+            <Link href="/" className="text-black text-base md:text-lg hover:text-[#568F87] transition-colors">
+              Terms of Service
+            </Link>
+
+          </div>
 
         </div>
 

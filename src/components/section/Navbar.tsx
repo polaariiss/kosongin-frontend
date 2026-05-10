@@ -50,15 +50,6 @@ export default function Navbar() {
               Komunitas
             </Link>
 
-            {!isLoggedIn && (
-              <Link
-                href="/register"
-                className="text-sm text-gray-400 font-medium hover:text-[#568F87] transition-colors"
-              >
-                Daftar
-              </Link>
-            )}
-
           </nav>
 
           {/* BUTTON / PROFILE */}
@@ -120,16 +111,6 @@ export default function Navbar() {
             >
               Komunitas
             </Link>
-
-            {!isLoggedIn && (
-              <Link
-                href="/register"
-                className="text-base font-medium text-gray-700"
-                onClick={() => setIsMobileMenuOpen(false)}
-              >
-                Daftar
-              </Link>
-            )}
 
             {/* MOBILE LOGIN BUTTON */}
             {!isLoggedIn && (
