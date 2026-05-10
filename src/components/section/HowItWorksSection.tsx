@@ -1,10 +1,10 @@
 export default function HowItWorks() {
   return (
-    <section id="cara" className="py-32 bg-[#f5f5f3]">
+    <section id="cara-kerja" className="py-32 bg-[#f5f5f3]">
 
       <div className="w-full px-8 md:px-16 lg:px-24">
 
-        <h2 className="font-heading text-4xl md:text-6xl font-bold mb-20">
+        <h2 className="font-heading text-4xl md:text-4xl font-bold mb-14">
           Cara Kerja
         </h2>
 
@@ -18,19 +18,19 @@ export default function HowItWorks() {
           ].map((item, i) => (
             <div key={i}>
 
-              <div className="flex items-center gap-6">
-                <span className="text-6xl font-bold">
+              <div className="flex items-center gap-5">
+                <span className="text-4xl font-bold">
                   {item.no}
                 </span>
 
-                <h3 className="text-3xl font-bold">
+                <h3 className="text-2xl font-bold">
                   {item.title}
                 </h3>
               </div>
 
               <div className="border-b-2 border-black mt-3 mb-4"></div>
 
-              <p className="ml-24 text-black font-sm text-xl">
+              <p className="ml-16 text-black font-sm text-lg">
                 {item.desc}
               </p>
 

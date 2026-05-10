@@ -1,7 +1,7 @@
 {
-  "/register/page": "app/register/page.js",
+  "/komunitas/page": "app/komunitas/page.js",
   "/dashboard/page": "app/dashboard/page.js",
-  "/tracking/page": "app/tracking/page.js",
+  "/page": "app/page.js",
   "/shield/page": "app/shield/page.js",
-  "/komunitas/page": "app/komunitas/page.js"
+  "/login/page": "app/login/page.js"
 }

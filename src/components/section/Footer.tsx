@@ -2,46 +2,97 @@ import Image from "next/image";
 
 export default function Footer() {
   return (
-    <footer className="bg-[#FFFAF9] py-20 border-t">
+    <footer className="bg-[#FFFAF9] py-14 border-t">
 
-      <div className="w-full px-8 md:px-16 lg:px-24 flex items-start justify-between gap-12">
+      <div className="w-full px-6 md:px-16 lg:px-24 flex flex-col md:flex-row items-start justify-between gap-10">
 
+        {/* LOGO */}
         <div>
+
           <Image
             src="/logo1.svg"
             alt="Logo"
-            width={100}
-            height={100}
-            className="mb-14"
+            width={60}
+            height={60}
+            className="mb-6"
           />
-          <h1 className="font-bold font-heading text-7xl">Kosongin</h1>
+
+          <h1 className="font-bold font-heading text-3xl md:text-4xl">
+            Kosongin
+          </h1>
+
         </div>
 
+        {/* HOME */}
         <div>
-          <p className="font-bold mb-14 text-3xl">Home</p>
-          <p className="text-black text-3xl mb-14">Fitur</p>
-          <p className="text-black text-3xl mb-14">Cara Kerja</p>
-          <p className="text-black text-3xl mb-14">Komunitas</p>
-          <p className="text-black text-3xl mb-14">Daftar</p>
+
+          <p className="font-bold mb-6 text-lg md:text-xl">
+            Home
+          </p>
+
+          <p className="text-black text-base md:text-lg mb-4">
+            Fitur
+          </p>
+
+          <p className="text-black text-base md:text-lg mb-4">
+            Cara Kerja
+          </p>
+
+          <p className="text-black text-base md:text-lg mb-4">
+            Komunitas
+          </p>
+
+          <p className="text-black text-base md:text-lg">
+            Daftar
+          </p>
+
         </div>
 
+        {/* CONTACT */}
         <div>
-          <p className="font-bold mb-14 text-3xl">Contact Us</p>
-          <p className="text-black text-3xl mb-14">Email</p>
-          <p className="text-black text-3xl mb-14">Instagram</p>
-          <p className="text-black text-3xl mb-14">LinkedIn</p>
+
+          <p className="font-bold mb-6 text-lg md:text-xl">
+            Contact Us
+          </p>
+
+          <p className="text-black text-base md:text-lg mb-4">
+            Email
+          </p>
+
+          <p className="text-black text-base md:text-lg mb-4">
+            Instagram
+          </p>
+
+          <p className="text-black text-base md:text-lg">
+            LinkedIn
+          </p>
+
         </div>
 
+        {/* LEGAL */}
         <div>
-          <p className="font-bold mb-14 text-3xl">Legal</p>
-          <p className="text-black text-3xl mb-14">Privacy Policy</p>
-          <p className="text-black text-3xl mb-14">Terms of Service</p>
+
+          <p className="font-bold mb-6 text-lg md:text-xl">
+            Legal
+          </p>
+
+          <p className="text-black text-base md:text-lg mb-4">
+            Privacy Policy
+          </p>
+
+          <p className="text-black text-base md:text-lg">
+            Terms of Service
+          </p>
+
         </div>
 
-        <div>
-          <p className="text-right text-3xl text-black">
+        {/* COPYRIGHT */}
+        <div className="w-full md:w-auto pt-6 md:pt-0">
+
+          <p className="text-left md:text-right text-sm md:text-base text-black">
             © 2026 Veteran Tech
           </p>
+
         </div>
 
       </div>

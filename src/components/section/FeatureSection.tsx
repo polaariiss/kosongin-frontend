@@ -2,15 +2,17 @@ import Image from "next/image";
 
 export default function Features() {
   return (
-    <section className="py-32 bg-[#f5f5f3]">
+    <section id="fitur" className="py-24 bg-[#f5f5f3] overflow-hidden">
 
-      <div className="px-8 md:px-16 lg:px-24">
+      <div className="px-6 md:px-16 lg:px-24">
 
-        <h2 className="text-4xl md:text-8xl font-heading font-bold mb-20">
+        {/* HEADING */}
+        <h2 className="text-3xl md:text-4xl font-heading font-bold mb-16">
           Fitur <span className="text-[#568F87]">Utama</span>
         </h2>
 
-        <div className="grid md:grid-cols-3 gap-32">
+        {/* GRID / SCROLL MOBILE */}
+        <div className="flex md:grid md:grid-cols-3 gap-6 overflow-x-auto md:overflow-visible pb-4 [&::-webkit-scrollbar]:hidden">
 
           {[
             {
@@ -31,30 +33,31 @@ export default function Features() {
           ].map((item, i) => (
             <div
               key={i}
-              className="bg-gradient-to-b from-[#A7C4C1] via-[#8FAFAD] to-[#6F9F98]
-              p-10 rounded-3xl shadow-sm hover:shadow-lg transition duration-300
-              flex flex-col items-center text-center aspect-[4/3] w-full"
+              className="bg-gradient-to-b from-[#A2C5C3] via-[#74A9A5] to-[#6A9A96] p-8 rounded-3xl shadow-sm hover:shadow-lg transition duration-300 flex flex-col items-center aspect-[4/3] min-w-[280px] md:w-full"
             >
 
               {/* ICON */}
               <Image
                 src={item.icon}
                 alt={item.title}
-                width={90}
-                height={90}
-                className="mt-10 mb-6"
+                width={40}
+                height={40}
+                className="mt-1 mb-5"
               />
 
-              <div className="w-full max-w-full text-left">
+              {/* TEXT */}
+              <div className="w-full text-left">
+
                 {/* TITLE */}
-                <h3 className="text-5xl text-center font-bold text-black">
+                <h3 className="text-2xl md:text-xl text-center font-bold text-black">
                   {item.title}
                 </h3>
 
                 {/* DESC */}
-                <p className="text-black/70 mt-12 text-4xl text-left">
+                <p className="text-black/70 mt-6 mb-14 text-base md:text-sm leading-relaxed">
                   {item.desc}
                 </p>
+
               </div>
 
             </div>
@@ -63,6 +66,7 @@ export default function Features() {
         </div>
 
       </div>
+
     </section>
   );
 }
