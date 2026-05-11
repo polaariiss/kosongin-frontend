@@ -138,12 +138,14 @@ export default function LoginPage() {
               </Link>
             </p>
             
-            <button 
-              onClick={handleAdminQuickLogin}
-              className="text-[11px] font-bold underline text-black hover:text-[#568F87] transition-colors"
-            >
-              Log in sebagai Admin
-            </button>
+            <Link href="/admin/login" title="Log in sebagai Admin">
+              <button 
+                onClick={handleAdminQuickLogin}
+                className="text-[11px] font-bold underline text-black hover:text-[#568F87] transition-colors"
+              >
+                Log in sebagai Admin
+              </button>
+            </Link>
           </div>
         </Card>
       </main>
