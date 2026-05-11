@@ -1,5 +1,6 @@
 "use client";
 
+import Image from "next/image";
 import Link from "next/link";
 import { useState } from "react";
 import ProfileDropdown from "@/components/ui/profile-dropdown";
@@ -18,9 +19,23 @@ export default function Navbar() {
         {/* LOGO */}
         <Link
           href="/"
-          className="text-2xl font-bold text-[#06322b] font-heading tracking-tight hover:opacity-80 transition-opacity"
+          className="hover:opacity-80 transition-opacity"
         >
-          Kosongin
+
+          {/* DESKTOP TEXT */}
+          <span className="hidden md:block text-2xl font-bold text-[#06322b] font-heading tracking-tight">
+            Kosongin
+          </span>
+
+          {/* MOBILE IMAGE */}
+          <Image
+            src="/logo1.svg"
+            alt="Kosongin Logo"
+            width={35}
+            height={35}
+            className="block md:hidden"
+          />
+
         </Link>
 
         {/* DESKTOP NAV */}

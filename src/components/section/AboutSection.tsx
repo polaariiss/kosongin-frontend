@@ -45,18 +45,12 @@ export default function About() {
 
         <div className="mt-60 w-full px-2 md:px-6 lg:px-10 text-xl leading-relaxed">
 
-          <p className="max-w-2xl">
-            Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
-            eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim
-            ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut
-            aliquip ex ea commodo consequat.
+          <p className="max-w-lg">
+            Kosongin hadir sebagai ruang refleksi konsumsi, bukan untuk menghakimi, tapi untuk membantu kamu sadar dan berubah sedikit demi sedikit.
           </p>
 
-          <p className="max-w-2xl md:ml-auto md:mt-32 mt-12">
-            Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
-            eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim
-            ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut
-            aliquip ex ea commodo consequat.
+          <p className="max-w-lg md:ml-auto md:mt-32 mt-12">
+            Lebih dari 60% Gen Z peduli lingkungan — tapi kesulitan mengubah kebiasaan belanja mereka. Kosongin hadir bukan untuk menyalahkan, tapi sebagai teman yang membantu kamu sadar satu langkah lebih awal dari checkout.
           </p>
 
         </div>

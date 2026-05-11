@@ -7,7 +7,7 @@ export default function Features() {
       <div className="px-6 md:px-16 lg:px-24">
 
         {/* HEADING */}
-        <h2 className="text-3xl md:text-4xl font-heading font-bold mb-16">
+        <h2 className="text-3xl md:text-4xl font-heading font-bold mb-10">
           Fitur <span className="text-[#568F87]">Utama</span>
         </h2>
 
@@ -49,12 +49,12 @@ export default function Features() {
               <div className="w-full text-left">
 
                 {/* TITLE */}
-                <h3 className="text-2xl md:text-xl text-center font-bold text-black">
+                <h3 className="text-[19px] md:text-xl text-center font-bold text-black">
                   {item.title}
                 </h3>
 
                 {/* DESC */}
-                <p className="text-black/70 mt-6 mb-14 text-base md:text-sm leading-relaxed">
+                <p className="text-black mt-6 mb-14 text-justify text-[14px] md:text-sm leading-relaxed">
                   {item.desc}
                 </p>
 

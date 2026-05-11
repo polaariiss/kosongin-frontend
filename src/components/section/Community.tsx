@@ -3,53 +3,53 @@ import Link from "next/link";
 
 export default function Community() {
   return (
-    <section id="komunitas" className="py-24 bg-[#f5f5f3]">
+    <section id="komunitas" className="py-16 md:py-24 bg-[#f5f5f3]">
 
       {/* CONTAINER */}
-      <div className="px-6 md:px-16 lg:px-24">
+      <div className="px-4 md:px-16 lg:px-24">
 
         {/* TITLE */}
-        <h2 className="text-3xl md:text-4xl font-bold mb-16">
+        <h2 className="text-2xl md:text-4xl font-bold mb-10 md:mb-16">
           Community Preview
         </h2>
 
         {/* SCROLL */}
-        <div className="flex gap-8 overflow-x-auto pb-4 scroll-smooth [&::-webkit-scrollbar]:hidden">
+        <div className="flex gap-5 md:gap-8 overflow-x-auto pb-4 scroll-smooth [&::-webkit-scrollbar]:hidden">
 
           {[
             {
-              title: "Judul Challenge",
-              image: "/coba.png",
-              desc: "Ikuti tantangan ini untuk hidup lebih mindful dan hemat.",
-              participants: 120,
+              title: "30 Hari Tanpa Fast Fashion",
+              image: "/challenge/one.png",
+              desc: "Tantang dirimu untuk tidak membeli pakaian baru selama 30 hari penuh.",
+              participants: 312,
               duration: "7 hari",
             },
             {
-              title: "No Buy Challenge",
-              image: "/coba.png",
-              desc: "Ikuti tantangan ini untuk hidup lebih mindful dan hemat.",
-              participants: 85,
-              duration: "14 hari",
+              title: "Zero Plastic Weekend",
+              image: "/challenge/two.png",
+              desc: "Dua hari akhir pekan tanpa plastik sekali pakai.",
+              participants: 234,
+              duration: "7 hari",
             },
             {
-              title: "Minimalist Month",
-              image: "/coba.png",
-              desc: "Ikuti tantangan ini untuk hidup lebih mindful dan hemat.",
-              participants: 200,
-              duration: "30 hari",
+              title: "No Impulse Buy Week",
+              image: "/challenge/three.png",
+              desc: "7 hari penuh tanpa klik \"Beli Sekarang\" tanpa pikir panjang.",
+              participants: 196,
+              duration: "7 hari",
             },
             {
-              title: "Eco Living Challenge",
-              image: "/coba.png",
-              desc: "Ikuti tantangan ini untuk hidup lebih mindful dan hemat.",
-              participants: 60,
-              duration: "10 hari",
+              title: "Makan Lokal Challenge",
+              image: "/challenge/four.jpg",
+              desc: "Hindari delvery food dan makan hanya dari restoran lokal selama seminggu.",
+              participants: 145,
+              duration: "7 hari",
             },
           ].map((item, i) => (
 
             <div
               key={i}
-              className="bg-white rounded-3xl shadow-sm overflow-hidden hover:shadow-md transition min-w-[320px] md:min-w-[280px] flex flex-col"
+              className="bg-white rounded-2xl md:rounded-3xl shadow-sm overflow-hidden hover:shadow-md transition min-w-[220px] md:min-w-[280px] flex flex-col"
             >
 
               {/* IMAGE */}
@@ -62,55 +62,66 @@ export default function Community() {
               />
 
               {/* CONTENT */}
-              <div className="p-5 flex flex-col flex-1">
+              <div className="p-3 md:p-5 flex flex-col flex-1">
 
-                <span className="inline-block border border-[#568F87] text-[#568F87] px-4 py-2 rounded-full text-sm md:text-base w-fit">
+                {/* TAG */}
+                <span className="inline-block border border-[#568F87] text-[#568F87] px-3 py-1 rounded-full text-[10px] md:text-base w-fit">
                   Zero Waste
                 </span>
 
-                <h3 className="mt-5 text-2xl md:text-2xl font-bold">
+                {/* TITLE */}
+                <h3 className="mt-3 md:mt-5 text-lg md:text-lg font-bold">
                   {item.title}
                 </h3>
 
-                <p className="text-base md:text-lg text-black mt-6 leading-relaxed">
+                {/* DESC */}
+                <p className="text-xs md:text-[12px] text-black mt-3 md:mt-3 leading-relaxed">
                   {item.desc}
                 </p>
 
-                <div className="mt-auto pt-8">
+                {/* BOTTOM */}
+                <div className="mt-auto pt-5 md:pt-8">
 
-                  <div className="flex items-center gap-2 text-base md:text-lg text-gray-600 mb-4">
+                  {/* INFO */}
+                  <div className="flex items-center gap-2 text-xs md:text-[12px] text-black mb-3 md:mb-4">
 
                     <Image
                       src="/user.png"
                       alt="user"
-                      width={16}
-                      height={16}
-                      className="w-4 h-4"
+                      width={12}
+                      height={12}
+                      className="w-3 h-3 md:w-4 md:h-4"
                     />
 
-                    <span>{item.participants}</span>
+                    <span>{item.participants} peserta</span>
 
-                    <span>•</span>
+                    <span>|</span>
 
                     <span>{item.duration}</span>
 
                   </div>
 
+                  {/* BUTTON */}
                   <Link href="/login">
 
-                    <button className="ml-auto w-fit bg-[#5c8f86] hover:bg-[#4a7a73] text-white font-semibold px-6 py-3 rounded-xl text-sm md:text-base transition">
-                      <div className="flex items-center justify-center gap-2">
+                    <button className="flex justify-end ml-auto w-fit bg-[#90BAB7] hover:bg-[#4a7a73] text-black font-semibold px-4 md:px-3 py-2 md:py-2.5 rounded-lg md:rounded-xl text-[10px] md:text-[12px] transition active:scale-95">
+
+                      <div className="flex items-center font-bold justify-center gap-2">
+
                         <span>Ikuti Challenge</span>
 
                         <Image
                           src="/arrow.png"
                           alt="arrow"
-                          width={14}
-                          height={14}
+                          width={10}
+                          height={10}
+                          className="md:w-[14px] md:h-[14px]"
                         />
 
                       </div>
+
                     </button>
+
                   </Link>
 
                 </div>
