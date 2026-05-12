@@ -41,7 +41,7 @@ export default function Community() {
             {
               title: "Makan Lokal Challenge",
               image: "/challenge/four.jpg",
-              desc: "Hindari delvery food dan makan hanya dari restoran lokal selama seminggu.",
+              desc: "Hindari delivery food dan makan hanya dari restoran lokal selama seminggu.",
               participants: 145,
               duration: "7 hari",
             },
@@ -49,7 +49,7 @@ export default function Community() {
 
             <div
               key={i}
-              className="bg-white rounded-2xl md:rounded-3xl shadow-sm overflow-hidden hover:shadow-md transition min-w-[220px] md:min-w-[280px] flex flex-col"
+              className="bg-white rounded-2xl md:rounded-3xl shadow-sm overflow-hidden hover:shadow-md transition w-[220px] md:w-[280px] flex-shrink-0 flex flex-col"
             >
 
               {/* IMAGE */}
@@ -70,12 +70,12 @@ export default function Community() {
                 </span>
 
                 {/* TITLE */}
-                <h3 className="mt-3 md:mt-5 text-lg md:text-lg font-bold">
+                <h3 className="mt-3 md:mt-5 text-lg font-bold h-[70px]">
                   {item.title}
                 </h3>
 
                 {/* DESC */}
-                <p className="text-xs md:text-[12px] text-black mt-3 md:mt-3 leading-relaxed">
+                <p className="text-xs md:text-[12px] text-black mt-3 leading-relaxed h-[70px]">
                   {item.desc}
                 </p>
 
@@ -102,27 +102,23 @@ export default function Community() {
                   </div>
 
                   {/* BUTTON */}
-                  <Link href="/login">
+                  <div className="flex justify-start">
 
-                    <button className="flex justify-end ml-auto w-fit bg-[#90BAB7] hover:bg-[#4a7a73] text-black font-semibold px-4 md:px-3 py-2 md:py-2.5 rounded-lg md:rounded-xl text-[10px] md:text-[12px] transition active:scale-95">
+                    <Link href="/login">
 
-                      <div className="flex items-center font-bold justify-center gap-2">
+                      <button className="w-fit bg-[#90BAB7] hover:bg-[#4a7a73] text-black font-semibold px-4 md:px-3 py-2 md:py-2.5 rounded-lg md:rounded-xl text-[10px] md:text-[12px] transition active:scale-95">
 
-                        <span>Ikuti Challenge</span>
+                        <div className="flex text-white items-center font-bold justify-center gap-2">
 
-                        <Image
-                          src="/arrow.png"
-                          alt="arrow"
-                          width={10}
-                          height={10}
-                          className="md:w-[14px] md:h-[14px]"
-                        />
+                          <span>Ikuti Challenge</span>
 
-                      </div>
+                        </div>
 
-                    </button>
+                      </button>
 
-                  </Link>
+                    </Link>
+
+                  </div>
 
                 </div>
 

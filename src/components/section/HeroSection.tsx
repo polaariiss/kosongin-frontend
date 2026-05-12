@@ -29,9 +29,9 @@ export default function HeroSection() {
             </p>
 
             {/* BUTTON DESKTOP */}
-            <Link href="/login" className="hidden md:flex md:justify-center">
+            <Link href="/login" className="hidden md:flex md:justify-start">
 
-              <button className=" mt-8 w-fit bg-[#90BAB7] px-20 py-3 rounded-2xl font-bold text-lg text-black hover:bg-[#4a7a73] transition-all active:scale-95">
+              <button className=" mt-8 w-fit bg-[#90BAB7] px-20 py-3 rounded-2xl font-bold text-lg text-white hover:bg-[#4a7a73] transition-all active:scale-95">
                 Mulai Kosongin
               </button>
 
@@ -45,9 +45,9 @@ export default function HeroSection() {
             <Image
               src="/headline.png"
               alt="Headline"
-              width={400}
-              height={400}
-              className="w-full max-w-[160px] md:max-w-[400px] aspect-square object-cover rounded-3xl"
+              width={300}
+              height={300}
+              className="w-full max-w-[160px] md:max-w-[500px] aspect-square object-cover rounded-3xl"
             />
 
           </div>
@@ -57,16 +57,9 @@ export default function HeroSection() {
         {/* BUTTON MOBILE */}
         <Link href="/login" className="flex justify-center md:hidden">
 
-          <button className="mt-10 w-fit bg-[#90BAB7] px-6 py-3 rounded-xl font-bold text-sm text-black hover:bg-[#4a7a73] transition-all active:scale-95">
+          <button className="mt-10 w-fit bg-[#90BAB7] px-6 py-3 rounded-xl font-bold text-sm text-white hover:bg-[#4a7a73] transition-all active:scale-95">
             <div className="flex items-center gap-2">
               <span>Mulai Kosongin</span>
-              <Image
-                src="/arrow.png"
-                alt="arrow"
-                width={0}
-                height={0}
-                className="h-[1em] w-auto"
-              />
             </div>
 
           </button>

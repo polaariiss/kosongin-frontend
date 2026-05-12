@@ -33,7 +33,7 @@ export default function Features() {
           ].map((item, i) => (
             <div
               key={i}
-              className="bg-gradient-to-b from-[#A2C5C3] via-[#74A9A5] to-[#6A9A96] p-8 rounded-3xl shadow-sm hover:shadow-lg transition duration-300 flex flex-col items-center aspect-[4/3] min-w-[280px] md:w-full"
+              className="bg-gradient-to-b from-[#A2C5C3] via-[#74A9A5] to-[#6A9A96] p-8 rounded-3xl shadow-sm hover:shadow-lg transition duration-300 flex flex-col items-center justify-center text-center aspect-[4/3] min-w-[280px] md:w-full"
             >
 
               {/* ICON */}
@@ -42,23 +42,18 @@ export default function Features() {
                 alt={item.title}
                 width={40}
                 height={40}
-                className="mt-1 mb-5"
+                className="mb-5"
               />
 
-              {/* TEXT */}
-              <div className="w-full text-left">
+              {/* TITLE */}
+              <h3 className="text-[19px] md:text-xl font-bold text-black">
+                {item.title}
+              </h3>
 
-                {/* TITLE */}
-                <h3 className="text-[19px] md:text-xl text-center font-bold text-black">
-                  {item.title}
-                </h3>
-
-                {/* DESC */}
-                <p className="text-black mt-6 mb-14 text-justify text-[14px] md:text-sm leading-relaxed">
-                  {item.desc}
-                </p>
-
-              </div>
+              {/* DESC */}
+              <p className="text-black mt-6 text-center text-[14px] md:text-sm leading-relaxed max-w-[220px]">
+                {item.desc}
+              </p>
 
             </div>
           ))}

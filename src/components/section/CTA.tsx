@@ -24,7 +24,7 @@ export default function CTA() {
         </p>
 
         <Link href="/login">
-          <button className="mt-24 bg-[#90BAB7] hover:bg-[#4a7a73] text-black font-bold px-5 md:px-16 py-3 md:py-5 rounded-xl text-[14px] md:text-2xl">
+          <button className="mt-24 bg-[#90BAB7] hover:bg-[#4a7a73] text-white font-bold px-5 md:px-16 py-3 md:py-5 rounded-xl text-[14px] md:text-2xl">
             Mulai Sekarang — Gratis
           </button>
         </Link>
