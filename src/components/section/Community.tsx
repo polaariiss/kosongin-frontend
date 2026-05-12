@@ -49,7 +49,7 @@ export default function Community() {
 
             <div
               key={i}
-              className="bg-white rounded-2xl md:rounded-3xl shadow-sm overflow-hidden hover:shadow-md transition w-[220px] md:w-[280px] flex-shrink-0 flex flex-col"
+              className="bg-white rounded-2xl md:rounded-3xl shadow-sm overflow-hidden hover:shadow-md transition w-[clamp(220px,28vw,340px)] flex-shrink-0 flex flex-col"
             >
 
               {/* IMAGE */}
@@ -65,17 +65,17 @@ export default function Community() {
               <div className="p-3 md:p-5 flex flex-col flex-1">
 
                 {/* TAG */}
-                <span className="inline-block border border-[#568F87] text-[#568F87] px-3 py-1 rounded-full text-[10px] md:text-base w-fit">
+                <span className="inline-block border border-[#568F87] text-[#568F87] px-3 py-1 rounded-full text-[10px] md:text-sm w-fit">
                   Zero Waste
                 </span>
 
                 {/* TITLE */}
-                <h3 className="mt-3 md:mt-5 text-lg font-bold h-[70px]">
+                <h3 className="mt-3 md:mt-5 text-base md:text-lg font-bold h-[60px] md:h-[70px]">
                   {item.title}
                 </h3>
 
                 {/* DESC */}
-                <p className="text-xs md:text-[12px] text-black mt-3 leading-relaxed h-[70px]">
+                <p className="text-xs md:text-[12px] text-black mt-3 leading-relaxed h-[60px] md:h-[70px]">
                   {item.desc}
                 </p>
 
@@ -106,9 +106,9 @@ export default function Community() {
 
                     <Link href="/login">
 
-                      <button className="w-fit bg-[#90BAB7] hover:bg-[#4a7a73] text-black font-semibold px-4 md:px-3 py-2 md:py-2.5 rounded-lg md:rounded-xl text-[10px] md:text-[12px] transition active:scale-95">
+                      <button className="w-fit bg-[#90BAB7] hover:bg-[#4a7a73] text-white font-semibold px-4 md:px-5 py-2 md:py-2.5 rounded-lg md:rounded-xl text-[10px] md:text-[12px] transition active:scale-95">
 
-                        <div className="flex text-white items-center font-bold justify-center gap-2">
+                        <div className="flex items-center justify-center gap-2 font-bold">
 
                           <span>Ikuti Challenge</span>
 

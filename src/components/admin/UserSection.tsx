@@ -1,37 +1,125 @@
 "use client";
 
+import {
+  useEffect,
+  useState,
+} from "react";
+
+import Cookies from "js-cookie";
+
+import api from "@/services/api";
+
 export default function UserSection() {
 
-  const users = [
-    {
-      id: 1,
-      name: "Andhika",
-      email: "andhika@mail.com",
-      status: "Aktif",
-      createdAt: "12 Mei 2026",
-    },
-    {
-      id: 2,
-      name: "Budi",
-      email: "budi@mail.com",
-      status: "Tidak Aktif",
-      createdAt: "10 Mei 2026",
-    },
-    {
-      id: 3,
-      name: "Sinta",
-      email: "sinta@mail.com",
-      status: "Aktif",
-      createdAt: "8 Mei 2026",
-    },
-    {
-      id: 4,
-      name: "Raka",
-      email: "raka@mail.com",
-      status: "Aktif",
-      createdAt: "5 Mei 2026",
-    },
-  ];
+  const [users, setUsers] =
+    useState<any[]>([]);
+
+  const [loading, setLoading] =
+    useState(true);
+
+  const [error, setError] =
+    useState("");
+
+  /* FETCH USERS */
+  useEffect(() => {
+
+    fetchUsers();
+
+  }, []);
+
+  const fetchUsers = async () => {
+
+    try {
+
+      /* TOKEN */
+      const token =
+        Cookies.get(
+          "admin_token"
+        );
+
+      /* API */
+      const res =
+        await api.get(
+          "/api/admin/users",
+          {
+            headers: {
+              Authorization:
+                `Bearer ${token}`,
+            },
+          }
+        );
+
+      console.log(
+        "USERS RESPONSE:",
+        res.data
+      );
+
+      /* SAFE ARRAY */
+      const usersData =
+        Array.isArray(
+          res.data.data
+        )
+          ? res.data.data
+          : Array.isArray(
+              res.data.data?.users
+            )
+          ? res.data.data.users
+          : [];
+
+      setUsers(
+        usersData
+      );
+
+    } catch (err: any) {
+
+      console.log(err);
+
+      console.log(
+        err.response?.status
+      );
+
+      console.log(
+        err.response?.data
+      );
+
+      setError(
+        "Gagal mengambil data pengguna"
+      );
+
+    } finally {
+
+      setLoading(false);
+
+    }
+  };
+
+  /* LOADING */
+  if (loading) {
+
+    return (
+      <div className="bg-[#FFFAF9] rounded-2xl border shadow-lg p-6 mb-8">
+
+        <p className="text-[#032119] font-semibold">
+          Loading users...
+        </p>
+
+      </div>
+    );
+  }
+
+  /* ERROR */
+  if (error) {
+
+    return (
+      <div className="bg-[#FFFAF9] rounded-2xl border shadow-lg p-6 mb-8">
+
+        <p className="text-red-500 font-semibold">
+          {error}
+        </p>
+
+      </div>
+    );
+  }
 
   return (
     <div className="bg-[#FFFAF9] rounded-2xl border shadow-lg p-6 mb-8">
@@ -131,61 +219,78 @@ export default function UserSection() {
           {/* BODY */}
           <tbody>
 
-            {users.map((user) => (
+            {Array.isArray(users) &&
+              users.map((user) => (
 
-              <tr
-                key={user.id}
-                className="border-t border-[#E5E7EB] bg-white"
-              >
+                <tr
+                  key={user.id}
+                  className="border-t border-[#E5E7EB] bg-white"
+                >
 
-                {/* USER */}
-                <td className="px-6 py-4">
+                  {/* USER */}
+                  <td className="px-6 py-4">
 
-                  <div>
+                    <div>
 
-                    <p className="text-sm font-medium text-[#032119]">
-                      {user.name}
-                    </p>
+                      <p className="text-sm font-medium text-[#032119]">
+                        {user.fullName ||
+                          user.name ||
+                          "-"}
+                      </p>
 
-                    <p className="text-xs text-gray-500 mt-1">
-                      @{user.name
-                        .toLowerCase()
-                        .replace(/\s/g, "_")}
-                    </p>
+                      <p className="text-xs text-gray-500 mt-1">
+                        @
+                        {user.nickname ||
+                          "unknown"}
+                      </p>
 
-                  </div>
+                    </div>
 
-                </td>
+                  </td>
 
-                {/* EMAIL */}
-                <td className="px-6 py-4 text-sm text-[#032119]">
-                  {user.email}
-                </td>
+                  {/* EMAIL */}
+                  <td className="px-6 py-4 text-sm text-[#032119]">
+                    {user.email || "-"}
+                  </td>
 
-                {/* DATE */}
-                <td className="px-6 py-4 text-sm text-[#032119]">
-                  {user.createdAt}
-                </td>
+                  {/* DATE */}
+                  <td className="px-6 py-4 text-sm text-[#032119]">
 
-                {/* STATUS */}
-                <td className="px-6 py-4">
+                    {user.createdAt
+                      ? new Date(
+                          user.createdAt
+                        ).toLocaleDateString(
+                          "id-ID",
+                          {
+                            day: "numeric",
+                            month: "long",
+                            year: "numeric",
+                          }
+                        )
+                      : "-"}
 
-                  <span
-                    className={`px-3 py-1 rounded-full text-sm font-medium ${
-                      user.status ===
-                      "Aktif"
-                        ? "bg-[#D7F5E7] text-[#0F7B45]"
-                        : "bg-[#FFE2E2] text-[#D62828]"
-                    }`}
-                  >
-                    {user.status}
-                  </span>
+                  </td>
 
-                </td>
+                  {/* STATUS */}
+                  <td className="px-6 py-4">
 
-              </tr>
+                    <span
+                      className={`px-3 py-1 rounded-full text-sm font-medium ${
+                        user.isActive
+                          ? "bg-[#D7F5E7] text-[#0F7B45]"
+                          : "bg-[#FFE2E2] text-[#D62828]"
+                      }`}
+                    >
+                      {user.isActive
+                        ? "Aktif"
+                        : "Tidak Aktif"}
+                    </span>
 
-            ))}
+                  </td>
+
+                </tr>
+
+              ))}
 
           </tbody>
 

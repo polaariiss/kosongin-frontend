@@ -1,85 +1,193 @@
 "use client";
 
-import { useState } from "react";
+import {
+  useEffect,
+  useState,
+} from "react";
 
-type Challenge = {
-  id: number;
-  title: string;
-  description: string;
-  category: string;
-  duration: number;
-  date: string;
-  image?: string;
-};
+import Cookies from "js-cookie";
 
-type ChallengeSectionProps = {
-  challenges: Challenge[];
-  setChallenges: React.Dispatch<React.SetStateAction<Challenge[]>>;
-};
+import api from "@/services/api";
 
-export default function ChallengeSection({
-  challenges,
-  setChallenges,
-}: ChallengeSectionProps) {
+export default function ChallengeSection() {
 
-  const [title, setTitle] = useState("");
-  const [description, setDescription] = useState("");
-  const [category, setCategory] = useState("");
-  const [duration, setDuration] = useState("");
-  const [date, setDate] = useState("");
-  const [image, setImage] = useState("");
+  const [loading, setLoading] =
+    useState(false);
 
-  /* HANDLE IMAGE */
-  const handleImageUpload = (
-    e: React.ChangeEvent<HTMLInputElement>
-  ) => {
+  const [error, setError] =
+    useState("");
 
-    const file = e.target.files?.[0];
+  const [form, setForm] =
+    useState({
+      title: "",
+      description: "",
+      category: "",
+      duration: "",
+      startDate: "",
+    });
 
-    if (!file) return;
+  /* FETCH CHALLENGES */
+  useEffect(() => {
 
-    const imageUrl = URL.createObjectURL(file);
+    fetchChallenges();
 
-    setImage(imageUrl);
+  }, []);
+
+  const fetchChallenges = async () => {
+
+    try {
+
+      /* TOKEN */
+      const token =
+        Cookies.get(
+          "admin_token"
+        );
+
+      /* API */
+      const res =
+        await api.get(
+          "/api/admin/challenges",
+          {
+            headers: {
+              Authorization:
+                `Bearer ${token}`,
+            },
+          }
+        );
+
+      console.log(
+        "CHALLENGES:",
+        res.data
+      );
+
+    } catch (err: any) {
+
+      console.log(err);
+
+      console.log(
+        err.response?.status
+      );
+
+      console.log(
+        err.response?.data
+      );
+
+    }
   };
 
-  /* HANDLE SAVE */
-  const handleSaveChallenge = () => {
+  /* SUBMIT */
+  const handleSubmit = async (
+    e: React.FormEvent
+  ) => {
 
-    if (!title || !description || !category || !duration || !date) {
-      alert("Semua field wajib diisi!");
-      return;
+    e.preventDefault();
+
+    try {
+
+      setLoading(true);
+
+      setError("");
+
+      /* TOKEN */
+      const token =
+        Cookies.get(
+          "admin_token"
+        );
+
+      /* API */
+      await api.post(
+        "/api/admin/challenges",
+        {
+          title: form.title,
+
+          description:
+            form.description,
+
+          fullDescription:
+            form.description,
+
+          rules:
+            "Ikuti challenge sesuai aturan challenge.",
+
+          howTo:
+            "Selesaikan challenge setiap hari.",
+
+          category:
+            form.category,
+
+          categoryTag:
+            form.category,
+
+          imageUrl:
+            "https://picsum.photos/600/400",
+
+          durationDays:
+            Number(
+              form.duration
+            ),
+
+          startDate:
+            `${form.startDate} 00:00:00`,
+
+          endDate:
+            `${form.startDate} 23:59:59`,
+        },
+        {
+          headers: {
+            Authorization:
+              `Bearer ${token}`,
+          },
+        }
+      );
+
+      /* RESET */
+      setForm({
+        title: "",
+        description: "",
+        category: "",
+        duration: "",
+        startDate: "",
+      });
+
+      /* RESET */
+      setForm({
+        title: "",
+      description: "",
+        category: "",
+        duration: "",
+        startDate: "",
+      });
+
+      /* RELOAD PAGE */
+      window.location.reload();
+
+    } catch (err: any) {
+
+      console.log(err);
+
+      console.log(
+        err.response?.status
+      );
+
+      console.log(
+        JSON.stringify(
+          err.response?.data,
+          null,
+          2
+        )
+      );
+
+      setError(
+        err.response?.data
+          ?.message ||
+          "Gagal membuat challenge"
+      );
+
+    } finally {
+
+      setLoading(false);
+
     }
-
-    const newChallenge: Challenge = {
-      id: Date.now(),
-      title,
-      description,
-      category,
-      duration: Number(duration),
-      date,
-
-      /* DEFAULT IMAGE */
-      image:
-        image && image.trim() !== ""
-          ? image
-          : "/coba.png",
-    };
-
-    setChallenges([
-      ...challenges,
-      newChallenge,
-    ]);
-
-    /* RESET */
-    setTitle("");
-    setDescription("");
-    setCategory("");
-    setDuration("");
-    setDate("");
-    setImage("");
-
-    alert("Challenge berhasil ditambahkan!");
   };
 
   return (
@@ -99,37 +207,54 @@ export default function ChallengeSection({
       </div>
 
       {/* FORM */}
-      <div className="space-y-5">
+      <form
+        onSubmit={handleSubmit}
+        className="space-y-5"
+      >
 
         {/* JUDUL */}
         <div>
 
-          <label className="block text-sm font-bold text-[#032119] mb-2">
+          <label className="block text-sm font-semibold text-[#032119] mb-2">
             Judul Challenge
           </label>
 
           <input
             type="text"
             placeholder="Nama Challenge..."
-            value={title}
-            onChange={(e) => setTitle(e.target.value)}
+            value={form.title}
+            onChange={(e) =>
+              setForm({
+                ...form,
+                title:
+                  e.target.value,
+              })
+            }
             className="w-full border border-[#6E8B88] rounded-xl px-4 py-4 outline-none bg-transparent"
           />
 
         </div>
 
-        {/* DESCRIPTION */}
+        {/* DESKRIPSI */}
         <div>
 
-          <label className="block text-sm font-bold text-[#032119] mb-2">
-            Deskripsi Challenge
+          <label className="block text-sm font-semibold text-[#032119] mb-2">
+            Deskripsi
           </label>
 
           <textarea
-            placeholder="Masukkan deskripsi challenge..."
-            value={description}
-            onChange={(e) => setDescription(e.target.value)}
-            className="w-full border border-[#6E8B88] rounded-xl px-4 py-4 outline-none bg-transparent min-h-[120px] resize-none"
+            placeholder="Deskripsi challenge..."
+            value={
+              form.description
+            }
+            onChange={(e) =>
+              setForm({
+                ...form,
+                description:
+                  e.target.value,
+              })
+            }
+            className="w-full border border-[#6E8B88] rounded-xl px-4 py-4 outline-none bg-transparent min-h-[120px]"
           />
 
         </div>
@@ -137,15 +262,21 @@ export default function ChallengeSection({
         {/* KATEGORI */}
         <div>
 
-          <label className="block text-sm font-bold text-[#032119] mb-2">
+          <label className="block text-sm font-semibold text-[#032119] mb-2">
             Kategori
           </label>
 
           <input
             type="text"
             placeholder="Zero Waste, Secondhand..."
-            value={category}
-            onChange={(e) => setCategory(e.target.value)}
+            value={form.category}
+            onChange={(e) =>
+              setForm({
+                ...form,
+                category:
+                  e.target.value,
+              })
+            }
             className="w-full border border-[#6E8B88] rounded-xl px-4 py-4 outline-none bg-transparent"
           />
 
@@ -157,23 +288,35 @@ export default function ChallengeSection({
           {/* DATE */}
           <div>
 
-            <label className="block text-sm font-bold text-[#032119] mb-2">
+            <label className="block text-sm font-semibold text-[#032119] mb-2">
               Tanggal Mulai
             </label>
 
-            <input
-              type="date"
-              value={date}
-              onChange={(e) => setDate(e.target.value)}
-              className="w-full border border-[#6E8B88] rounded-xl px-4 py-4 outline-none bg-transparent"
-            />
+            <div className="relative">
+
+              <input
+                type="date"
+                value={
+                  form.startDate
+                }
+                onChange={(e) =>
+                  setForm({
+                    ...form,
+                    startDate:
+                      e.target.value,
+                  })
+                }
+                className="w-full border border-[#6E8B88] rounded-xl px-4 py-4 outline-none bg-transparent"
+              />
+
+            </div>
 
           </div>
 
           {/* DURASI */}
           <div>
 
-            <label className="block text-sm font-bold text-[#032119] mb-2">
+            <label className="block text-sm font-semibold text-[#032119] mb-2">
               Durasi (hari)
             </label>
 
@@ -182,8 +325,14 @@ export default function ChallengeSection({
               placeholder="30"
               min={1}
               step={1}
-              value={duration}
-              onChange={(e) => setDuration(e.target.value)}
+              value={form.duration}
+              onChange={(e) =>
+                setForm({
+                  ...form,
+                  duration:
+                    e.target.value,
+                })
+              }
               className="w-full border border-[#6E8B88] rounded-xl px-4 py-4 outline-none bg-transparent"
             />
 
@@ -191,64 +340,31 @@ export default function ChallengeSection({
 
         </div>
 
-        {/* POSTER */}
-        <div>
+        {/* ERROR */}
+        {error && (
 
-          <label className="block text-sm font-bold text-[#032119] mb-2">
-            Poster image (JPG/PNG, max 5MB, opsional)
-          </label>
+          <div className="bg-red-100 text-red-600 text-sm p-4 rounded-xl">
 
-          {/* DROPZONE */}
-          <label className="w-full min-h-[180px] border-2 border-dashed border-[#6E8B88] rounded-2xl flex flex-col items-center justify-center cursor-pointer bg-[#F8FBFB] hover:bg-[#F1F6F6] transition-all">
+            {error}
 
-            {/* ICON */}
-            <p className="text-2xl">📷</p>
+          </div>
 
-            {/* TEXT */}
-            <p className="text-[#032119] font-semibold text-lg">
-              Drag & drop image here
-            </p>
-
-            <p className="text-sm text-gray-500 mt-1">
-              atau klik untuk memilih file
-            </p>
-
-            <p className="text-xs text-gray-400 mt-3">
-              JPG, PNG • Maksimal 5MB
-            </p>
-
-            {/* INPUT FILE */}
-            <input
-              type="file"
-              accept="image/png, image/jpeg"
-              className="hidden"
-              onChange={handleImageUpload}
-            />
-
-          </label>
-
-          {/* PREVIEW */}
-          {image && (
-            <img
-              src={image}
-              alt="Preview"
-              className="mt-4 w-full h-52 object-cover rounded-2xl"
-            />
-          )}
-
-        </div>
+        )}
 
         {/* BUTTON */}
         <button
-          onClick={handleSaveChallenge}
+          type="submit"
+          disabled={loading}
           className="w-full bg-[#90BAB7] hover:bg-[#7DA7A4] transition-all text-[#032119] font-bold py-4 rounded-xl"
         >
 
-          Simpan Challenge
+          {loading
+            ? "Loading..."
+            : "Simpan Challenge"}
 
         </button>
 
-      </div>
+      </form>
 
     </div>
   );

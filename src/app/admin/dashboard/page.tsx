@@ -1,7 +1,5 @@
 "use client";
 
-import { useState } from "react";
-
 import AdminNavbar from "@/components/admin/AdminNavbar";
 import OverviewStats from "@/components/admin/OverviewStats";
 import MonitoringSection from "@/components/admin/MonitoringSection";
@@ -9,22 +7,7 @@ import UserSection from "@/components/admin/UserSection";
 import ChallengeSection from "@/components/admin/ChallengeSection";
 import ActiveChallengeSection from "@/components/admin/ActiveChallengeSection";
 
-type Challenge = {
-  id: number;
-  title: string;
-  description: string;
-  category: string;
-  duration: number;
-  date: string;
-  participants?: number;
-  image?: string;
-};
-
 export default function AdminDashboardPage() {
-
-  /* STATE CHALLENGE */
-  const [challenges, setChallenges] =
-    useState<Challenge[]>([]);
 
   return (
     <div
@@ -62,16 +45,10 @@ export default function AdminDashboardPage() {
         <div id="challenges">
 
           {/* FORM CHALLENGE */}
-          <ChallengeSection
-            challenges={challenges}
-            setChallenges={setChallenges}
-          />
+          <ChallengeSection />
 
           {/* ACTIVE CHALLENGE */}
-          <ActiveChallengeSection
-            challenges={challenges}
-            setChallenges={setChallenges}
-          />
+          <ActiveChallengeSection />
 
         </div>
 

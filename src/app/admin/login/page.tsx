@@ -3,12 +3,20 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import Cookies from "js-cookie";
+import api from "@/services/api";
+import { jwtDecode } from "jwt-decode";
+
+type DecodedToken = {
+  id: string;
+  role: string;
+  exp: number;
+};
 
 export default function AdminLoginPage() {
 
   const router = useRouter();
 
-  const [email, setEmail] =
+  const [identifier, setIdentifier] =
     useState("");
 
   const [password, setPassword] =
@@ -18,76 +26,136 @@ export default function AdminLoginPage() {
     useState(false);
 
   const [error, setError] =
-    useState(false);
+    useState("");
 
   const handleLogin = async (
     e: React.FormEvent
   ) => {
+
     e.preventDefault();
 
     try {
+
       setLoading(true);
 
-      /* RESET ERROR */
-      setError(false);
+      setError("");
 
-      /* DEMO ADMIN ACCOUNT */
-      const adminEmail =
-        "admin@kosongin.com";
-
-      const adminPassword =
-        "admin123";
-
-      /* VALIDASI LOGIN */
-      if (
-        email === adminEmail &&
-        password ===
-          adminPassword
-      ) {
-
-        /* SAVE COOKIE */
-        Cookies.set(
-          "admin_token",
-          "dummy_admin_token",
+      /* LOGIN SESUAI BACKEND */
+      const response =
+        await api.post(
+          "/api/auth/login",
           {
-            expires: 1,
+            ...(identifier.includes("@")
+              ? {
+                  email:
+                    identifier,
+                }
+              : {
+                  nickname:
+                    identifier,
+                }),
+
+            password,
           }
         );
 
-        /* SAVE ADMIN DATA */
-        localStorage.setItem(
-          "admin_data",
-          JSON.stringify({
-            name: "Admin",
-            email:
-              adminEmail,
-            role: "admin",
-          })
+      console.log(
+        "LOGIN RESPONSE:",
+        response.data
+      );
+
+      /* TOKEN */
+      const accessToken =
+        response.data.data
+          .accessToken;
+
+      /* DECODE TOKEN */
+      const decoded =
+        jwtDecode<DecodedToken>(
+          accessToken
         );
 
-        /* REDIRECT */
-        router.push(
-          "/admin/dashboard"
+      console.log(
+        "DECODED TOKEN:",
+        decoded
+      );
+
+      /* VALIDASI ROLE */
+      if (
+        decoded.role !==
+        "admin"
+      ) {
+
+        setError(
+          "Akun ini bukan admin."
         );
 
         return;
       }
 
-      /* LOGIN GAGAL */
-      setError(true);
+      /* SAVE TOKEN */
+      Cookies.set(
+        "admin_token",
+        accessToken,
+        {
+          expires: 1,
+        }
+      );
 
-    } catch (err) {
+      /* SAVE ADMIN DATA */
+      localStorage.setItem(
+        "admin_data",
+        JSON.stringify({
+          id: decoded.id,
+          role: decoded.role,
+          identifier,
+        })
+      );
+
+      /* REDIRECT */
+      router.push(
+        "/admin/dashboard"
+      );
+
+    } catch (err: any) {
+
+      console.log(
+        "LOGIN ERROR:"
+      );
+
       console.log(err);
 
-      setError(true);
+      console.log(
+        "STATUS:"
+      );
+
+      console.log(
+        err.response?.status
+      );
+
+      console.log(
+        "DATA:"
+      );
+
+      console.log(
+        err.response?.data
+      );
+
+      setError(
+        err?.response?.data
+          ?.message ||
+          "Login admin gagal"
+      );
 
     } finally {
+
       setLoading(false);
+
     }
   };
 
   return (
-    <div className="min-h-screen flex flex-col items-center justify-center bg-[#F5F5F5] px-4">
+    <div className="min-h-screen flex items-center justify-center bg-[#F5F5F5] px-4">
 
       <div className="w-full max-w-[420px] bg-[#FFFAF9] p-8 rounded-2xl shadow-lg">
 
@@ -98,7 +166,7 @@ export default function AdminLoginPage() {
 
         {/* DESC */}
         <p className="text-black text-[14px] mb-6">
-          Please enter your email and password to log in to your account.
+          Please enter your email or username and password to log in to your account.
         </p>
 
         {/* FORM */}
@@ -106,24 +174,24 @@ export default function AdminLoginPage() {
           onSubmit={handleLogin}
         >
 
-          {/* EMAIL */}
+          {/* EMAIL / USERNAME */}
           <div className="mb-4">
 
             <label className="block mb-1 text-lg font-bold">
-              Email/Username
+              Email / Username
             </label>
 
             <input
-              type="email"
-              placeholder="admin@kosongin.com"
+              type="text"
+              placeholder="admin@kosongin.com / superadmin"
               className={`w-full border-2 p-3 rounded-lg outline-none ${
                 error
                   ? "border-red-400"
                   : "border-black"
               }`}
-              value={email}
+              value={identifier}
               onChange={(e) =>
-                setEmail(
+                setIdentifier(
                   e.target.value
                 )
               }
@@ -131,8 +199,8 @@ export default function AdminLoginPage() {
             />
 
             {error && (
-              <p className="text-red-500 text-sm mt-1 font-semibold ">
-                Format email tidak valid. Coba periksa kembali.
+              <p className="text-red-500 text-sm mt-1 font-semibold">
+                Email / Username atau password salah.
               </p>
             )}
 
@@ -181,6 +249,7 @@ export default function AdminLoginPage() {
               />
 
               Remember me
+
             </label>
 
             <button
@@ -192,28 +261,42 @@ export default function AdminLoginPage() {
 
           </div>
 
+          {/* ERROR */}
+          {error && (
+
+            <div className="bg-red-100 text-red-600 text-sm p-3 rounded-lg mb-4">
+
+              {error}
+
+            </div>
+
+          )}
+
           {/* BUTTON */}
           <button
             type="submit"
             disabled={loading}
-            className="w-full bg-[#90BAB7] hover:bg-[#5A7A6D] text-black p-4 rounded-lg font-bold text-xl"
+            className="w-full bg-[#90BAB7] hover:bg-[#7DA7A4] text-black p-4 rounded-lg font-bold text-xl transition-all"
           >
+
             {loading
               ? "Loading..."
               : "Log in"}
+
           </button>
 
         </form>
+
       </div>
+
       {/* LOGIN USER */}
-      <div className="w-full max-w-[420px] mt-4 flex justify-end">
+      <div className="absolute bottom-6 right-6">
 
         <button
-          type="button"
           onClick={() =>
             router.push("/login")
           }
-          className="text-sm font-bold text-black underline"
+          className="text-sm font-bold text-[#032119] underline"
         >
           Log in sebagai User
         </button>
@@ -221,6 +304,5 @@ export default function AdminLoginPage() {
       </div>
 
     </div>
-    
   );
 }
