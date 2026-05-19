@@ -6,7 +6,6 @@ import {
 } from "react";
 
 import Cookies from "js-cookie";
-
 import api from "@/services/api";
 
 export default function ChallengeSection() {
@@ -262,23 +261,63 @@ export default function ChallengeSection() {
         {/* KATEGORI */}
         <div>
 
-          <label className="block text-sm font-semibold text-[#032119] mb-2">
+          <label className="block text-sm font-semibold text-[#032119] mb-3">
             Kategori
           </label>
 
-          <input
-            type="text"
-            placeholder="Zero Waste, Secondhand..."
-            value={form.category}
-            onChange={(e) =>
-              setForm({
-                ...form,
-                category:
-                  e.target.value,
-              })
-            }
-            className="w-full border border-[#6E8B88] rounded-xl px-4 py-4 outline-none bg-transparent"
-          />
+          <div className="flex flex-wrap gap-3">
+
+            {[
+              {
+                name: "Zero Waste",
+                border: "border-[#5FAE7B]",
+                bg: "bg-[#EDF8F1]",
+              },
+              {
+                name: "Secondhand",
+                border: "border-[#C8B07A]",
+                bg: "bg-[#FFF9EB]",
+              },
+              {
+                name: "Eco Eating",
+                border: "border-[#6B9BD9]",
+                bg: "bg-[#EEF5FF]",
+              },
+              {
+                name: "No Impulse Buy",
+                border: "border-[#D96B6B]",
+                bg: "bg-[#FFF1F1]",
+              },
+              {
+                name: "Low Spend",
+                border: "border-[#8B7AD1]",
+                bg: "bg-[#F3EEFF]",
+              },
+            ].map((item) => (
+
+              <button
+                key={item.name}
+                type="button"
+                onClick={() =>
+                  setForm({
+                    ...form,
+                    category: item.name,
+                  })
+                }
+                className={`px-4 py-2 rounded-full border text-sm transition-all ${
+                  form.category === item.name
+                    ? `${item.border} ${item.bg} font-semibold text-[#032119]`
+                    : `${item.border} bg-[#FFFAF9] text-[#032119] hover:${item.bg}`
+                }`}
+              >
+
+                {item.name}
+
+              </button>
+
+            ))}
+
+          </div>
 
         </div>
 

@@ -9,6 +9,7 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@hey-api/client-fetch": "^0.13.1",
     "@radix-ui/react-slot": "^1.2.4",
     "axios": "^1.16.0",
     "class-variance-authority": "^0.7.1",
@@ -24,6 +25,7 @@
     "tailwind-merge": "^3.5.0"
   },
   "devDependencies": {
+    "@hey-api/openapi-ts": "^0.97.2",
     "@types/js-cookie": "^3.0.6",
     "@types/node": "^20.19.39",
     "@types/react": "^18.2.79",

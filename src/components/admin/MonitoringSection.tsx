@@ -6,7 +6,6 @@ import {
 } from "react";
 
 import Cookies from "js-cookie";
-
 import api from "@/services/api";
 
 export default function MonitoringSection() {
