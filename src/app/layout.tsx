@@ -1,3 +1,4 @@
+import "@/lib/api-client";
 import "./index.css";
 import { Fraunces } from "next/font/google";
 

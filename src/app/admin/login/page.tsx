@@ -1,10 +1,13 @@
 "use client";
 
+import { client } from "@/lib/api-client";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import Cookies from "js-cookie";
-import api from "@/services/api";
 import { jwtDecode } from "jwt-decode";
+
+/* HEY API */
+import { postAuthLogin } from "@/api/sdk.gen";
 
 type DecodedToken = {
   id: string;
@@ -40,11 +43,11 @@ export default function AdminLoginPage() {
 
       setError("");
 
-      /* LOGIN SESUAI BACKEND */
+      /* LOGIN HEY API */
       const response =
-        await api.post(
-          "/api/auth/login",
-          {
+        await postAuthLogin({
+          client,
+          body: {
             ...(identifier.includes("@")
               ? {
                   email:
@@ -56,18 +59,31 @@ export default function AdminLoginPage() {
                 }),
 
             password,
-          }
-        );
+          },
+        });
 
       console.log(
         "LOGIN RESPONSE:",
-        response.data
+        response
       );
 
-      /* TOKEN */
+      console.log(
+        "TOKEN:",
+        response.data?.data?.accessToken
+      );
+
+      /* AMBIL TOKEN */
       const accessToken =
-        response.data.data
-          .accessToken;
+        response.data?.data?.accessToken;
+
+      if (!accessToken) {
+
+        setError(
+          "Access token tidak ditemukan"
+        );
+
+        return;
+      }
 
       /* DECODE TOKEN */
       const decoded =
@@ -80,7 +96,7 @@ export default function AdminLoginPage() {
         decoded
       );
 
-      /* VALIDASI ROLE */
+      /* VALIDASI ADMIN */
       if (
         decoded.role !==
         "admin"
@@ -102,7 +118,7 @@ export default function AdminLoginPage() {
         }
       );
 
-      /* SAVE ADMIN DATA */
+      /* SAVE DATA ADMIN */
       localStorage.setItem(
         "admin_data",
         JSON.stringify({
@@ -120,31 +136,14 @@ export default function AdminLoginPage() {
     } catch (err: any) {
 
       console.log(
-        "LOGIN ERROR:"
-      );
-
-      console.log(err);
-
-      console.log(
-        "STATUS:"
-      );
-
-      console.log(
-        err.response?.status
-      );
-
-      console.log(
-        "DATA:"
-      );
-
-      console.log(
-        err.response?.data
+        "LOGIN ERROR:",
+        err
       );
 
       setError(
-        err?.response?.data
-          ?.message ||
-          "Login admin gagal"
+        err?.body?.message ||
+        err?.message ||
+        "Login admin gagal"
       );
 
     } finally {
@@ -238,7 +237,7 @@ export default function AdminLoginPage() {
 
           </div>
 
-          {/* REMEMBER ME */}
+          {/* REMEMBER */}
           <div className="flex items-center justify-between mb-6">
 
             <label className="flex items-center gap-2 text-sm font-bold text-black">
