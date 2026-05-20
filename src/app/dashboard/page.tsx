@@ -75,7 +75,7 @@ export default function DashboardPage() {
 
             <button 
               onClick={() => router.push("/tracking")}
-              className="bg-[#9bbab1] hover:bg-[#8aa79e] text-[#1a3c34] font-bold px-12 py-5 rounded-[20px] text-lg border-none transition-all hover:scale-105 shadow-lg shadow-teal-900/10"
+              className="bg-[#9bbab1] hover:bg-[#8aa79e] text-white font-bold px-12 py-5 rounded-[20px] text-lg border-none transition-all hover:scale-105 shadow-lg shadow-teal-900/10"
             >
               Catat Konsumsi Pertama
             </button>
@@ -97,7 +97,7 @@ export default function DashboardPage() {
           </div>
           <button 
             onClick={() => router.push("/tracking")}
-            className="bg-[#5E8B7E] hover:bg-[#4d7268] text-[#032119] font-bold rounded-2xl px-6 py-4 flex items-center gap-2 border-none"
+            className="bg-[#5E8B7E] hover:bg-[#4d7268] text-white font-bold rounded-2xl px-6 py-4 flex items-center gap-2 border-none"
           >
             <Plus className="w-5 h-5" /> Catat Pengeluaran
           </button>

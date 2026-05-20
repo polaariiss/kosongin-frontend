@@ -2,154 +2,98 @@
 
 import Image from "next/image";
 import Link from "next/link";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import ProfileDropdown from "@/components/ui/profile-dropdown";
 import { Menu, X } from "lucide-react";
 
 export default function Navbar() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [userName, setUserName] = useState("User");
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+
+  useEffect(() => {
+    const session = localStorage.getItem("user_session");
+    const savedName = localStorage.getItem("user_name");
+    
+    if (session === "true") {
+      setIsLoggedIn(true);
+      if (savedName) setUserName(savedName);
+    }
+  }, []);
 
   return (
     <header className="sticky top-0 z-50 bg-white border-b border-gray-100">
-
-      {/* CONTAINER */}
       <div className="w-full px-6 md:px-12 py-5 flex items-center justify-between">
-
+        
         {/* LOGO */}
-        <Link
-          href="/"
-          className="hover:opacity-80 transition-opacity"
-        >
-
-          {/* DESKTOP TEXT */}
-          <span className="hidden md:block text-2xl font-bold text-[#06322b] font-heading tracking-tight">
+        <Link href="/" className="hover:opacity-80 transition-opacity">
+          <span className="hidden md:block text-2xl font-bold text-[#06322b] tracking-tight">
             Kosongin
           </span>
-
-          {/* MOBILE IMAGE */}
-          <Image
-            src="/logo1.svg"
-            alt="Kosongin Logo"
-            width={35}
-            height={35}
-            className="block md:hidden"
-          />
-
+          <Image src="/logo1.svg" alt="Logo" width={35} height={35} className="block md:hidden" />
         </Link>
 
         {/* DESKTOP NAV */}
         <div className="hidden md:flex items-center gap-6 md:gap-10">
-
-          {/* NAVIGATION */}
           <nav className="flex items-center gap-8">
-
-            <Link
-              href="#fitur"
-              className="text-sm text-gray-400 font-medium hover:text-[#568F87] transition-colors"
-            >
-              Fitur
-            </Link>
-
-            <Link
-              href="#cara-kerja"
-              className="text-sm text-gray-400 font-medium hover:text-[#568F87] transition-colors"
-            >
-              Cara Kerja
-            </Link>
-
-            <Link
-              href="#komunitas"
-              className="text-sm text-gray-400 font-medium hover:text-[#568F87] transition-colors"
-            >
-              Komunitas
-            </Link>
-
+            <Link href="/dashboard" className="text-sm text-[#06322b] font-bold border-b-2 border-[#568F87] pb-1">Dashboard</Link>
+            <Link href="/tracking" className="text-sm text-gray-400 font-medium hover:text-[#568F87]">Tracking</Link>
+            <Link href="/shield" className="text-sm text-gray-400 font-medium hover:text-[#568F87]">Impulse Shield</Link>
+            <Link href="/komunitas" className="text-sm text-gray-400 font-medium hover:text-[#568F87]">Komunitas</Link>
           </nav>
 
-          {/* BUTTON / PROFILE */}
+          {/* PROFILE SECTION - SINKRON DICEBEAR & UKURAN */}
           {isLoggedIn ? (
-            <ProfileDropdown />
-          ) : (
-            <Link href="/login">
-
-              <button className="bg-[#568F87] hover:bg-[#4a7a73] text-white text-sm font-semibold px-6 py-3 rounded-xl transition-all active:scale-95">
-                Mulai Sekarang
+            <div className="relative">
+              <button 
+                onClick={() => setIsDropdownOpen(!isDropdownOpen)}
+                // UKURAN w-12 h-12 & BORDER PUTIH (Sama dengan Dropdown)
+                className="w-12 h-12 rounded-full bg-[#D4E4BC] border-2 border-white shadow-sm overflow-hidden flex items-center justify-center transition-all active:scale-95"
+              >
+                <img 
+                  src={`https://api.dicebear.com/7.x/avataaars/svg?seed=${userName}`} 
+                  alt="profile" 
+                  className="w-full h-full object-cover"
+                />
               </button>
 
+              {/* TAMPILAN DROPDOWN */}
+              {isDropdownOpen && (
+                <div className="absolute right-0 top-[110%] z-[60]">
+                   <ProfileDropdown />
+                </div>
+              )}
+            </div>
+          ) : (
+            <Link href="/login">
+              <button className="bg-[#568F87] hover:bg-[#4a7a73] text-white text-sm font-semibold px-6 py-3 rounded-xl transition-all">
+                Mulai Sekarang
+              </button>
             </Link>
           )}
-
         </div>
 
-        {/* MOBILE BUTTON */}
-        <button
-          className="md:hidden ml-auto"
-          onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-        >
-          {isMobileMenuOpen ? (
-            <X size={28} />
-          ) : (
-            <Menu size={28} />
-          )}
+        {/* MOBILE MENU BUTTON */}
+        <button className="md:hidden ml-auto text-[#06322b]" onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}>
+          {isMobileMenuOpen ? <X size={28} /> : <Menu size={28} />}
         </button>
-
       </div>
 
-      {/* MOBILE MENU */}
+      {/* MOBILE NAV */}
       {isMobileMenuOpen && (
-
-        <div className="md:hidden absolute top-full left-0 w-full border-t border-gray-100 bg-white px-6 py-6 shadow-lg z-50">
-
-          <nav className="flex flex-col items-end gap-6 text-right">
-
-            <Link
-              href="#fitur"
-              className="text-base font-medium text-gray-700"
-              onClick={() => setIsMobileMenuOpen(false)}
-            >
-              Fitur
-            </Link>
-
-            <Link
-              href="#cara-kerja"
-              className="text-base font-medium text-gray-700"
-              onClick={() => setIsMobileMenuOpen(false)}
-            >
-              Cara Kerja
-            </Link>
-
-            <Link
-              href="#komunitas"
-              className="text-base font-medium text-gray-700"
-              onClick={() => setIsMobileMenuOpen(false)}
-            >
-              Komunitas
-            </Link>
-
-            {/* MOBILE LOGIN BUTTON */}
+        <div className="md:hidden absolute top-full left-0 w-full bg-white border-t p-6 shadow-2xl animate-in slide-in-from-top">
+          <nav className="flex flex-col items-end gap-6">
+            <Link href="/dashboard" className="font-bold text-[#06322b]">Dashboard</Link>
+            <Link href="/tracking" className="text-gray-500">Tracking</Link>
             {!isLoggedIn && (
-
-              <div className="flex justify-center pt-2">
-
-                <Link href="/login">
-
-                  <button className="w-fit px-4 py-2 bg-[#568F87] hover:bg-[#4a7a73] text-white rounded-xl font-semibold transition-all active:scale-95">
-                    Mulai Sekarang
-                  </button>
-
-                </Link>
-
-              </div>
-
+              <Link href="/login">
+                <button className="bg-[#568F87] text-white px-6 py-3 rounded-xl font-bold">Mulai Sekarang</button>
+              </Link>
             )}
-
           </nav>
-
         </div>
-
       )}
-
     </header>
   );
 }

@@ -39,7 +39,7 @@ export default function NotFound() {
           <div className="flex items-center gap-6">
             <Button 
               asChild
-              className="bg-[#5E8B7E] hover:bg-[#4d7268] text-[#032119] font-bold px-8 py-6 rounded-[16px] transition-all active:scale-95 border-none shadow-none"
+              className="bg-[#5E8B7E] hover:bg-[#4d7268] text-white font-bold px-8 py-6 rounded-[16px] transition-all active:scale-95 border-none shadow-none"
             >
               <Link href="/dashboard">Balik ke Home</Link>
             </Button>

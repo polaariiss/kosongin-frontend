@@ -217,7 +217,7 @@ export default function ActiveChallengeSection() {
                 {/* BUTTON */}
                 <div className="flex gap-3 mt-6">
 
-                  <button className="flex-1 bg-[#90BAB7] hover:bg-[#7DA7A4] transition-all text-[#032119] font-semibold py-3 rounded-xl">
+                  <button className="flex-1 bg-[#90BAB7] hover:bg-[#7DA7A4] transition-all text-white font-semibold py-3 rounded-xl">
 
                     Edit
 

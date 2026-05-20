@@ -38,7 +38,7 @@ export default function ForbiddenPage() {
           <div className="flex items-center gap-8">
             <Button 
               asChild
-              className="bg-[#5E8B7E] hover:bg-[#4d7268] text-[#032119] font-bold px-10 py-7 rounded-[18px] transition-all active:scale-95 border-none shadow-none text-md"
+              className="bg-[#5E8B7E] hover:bg-[#4d7268] text-white font-bold px-10 py-7 rounded-[18px] transition-all active:scale-95 border-none shadow-none text-md"
             >
               <Link href="/login">Login Sekarang</Link>
             </Button>

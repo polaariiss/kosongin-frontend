@@ -355,7 +355,7 @@ export default function ChallengeSection() {
         <button
           type="submit"
           disabled={loading}
-          className="w-full bg-[#90BAB7] hover:bg-[#7DA7A4] transition-all text-[#032119] font-bold py-4 rounded-xl"
+          className="w-full bg-[#90BAB7] hover:bg-[#7DA7A4] transition-all text-white font-bold py-4 rounded-xl"
         >
 
           {loading

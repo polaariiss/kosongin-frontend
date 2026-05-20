@@ -164,7 +164,7 @@ export default function ImpulseShieldPage() {
               </div>
             </div>
 
-            <Button type="submit" className="w-full bg-[#9bbab1] hover:bg-[#8aa79e] text-[#1a3c34] font-bold py-7 rounded-xl border-none">
+            <Button type="submit" className="w-full bg-[#9bbab1] hover:bg-[#8aa79e] text-white font-bold py-7 rounded-xl border-none">
               Tambahkan ke Waiting List
             </Button>
           </form>

@@ -3,8 +3,9 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import Cookies from "js-cookie";
-import api from "@/services/api";
+import heyApi from "@/services/heyApi";
 import { jwtDecode } from "jwt-decode";
+import { Eye, EyeOff } from "lucide-react"; // Import icon mata
 
 type DecodedToken = {
   id: string;
@@ -13,296 +14,117 @@ type DecodedToken = {
 };
 
 export default function AdminLoginPage() {
-
   const router = useRouter();
+  const [identifier, setIdentifier] = useState("");
+  const [password, setPassword] = useState("");
+  const [showPassword, setShowPassword] = useState(false); // State buat show/hide
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState("");
 
-  const [identifier, setIdentifier] =
-    useState("");
-
-  const [password, setPassword] =
-    useState("");
-
-  const [loading, setLoading] =
-    useState(false);
-
-  const [error, setError] =
-    useState("");
-
-  const handleLogin = async (
-    e: React.FormEvent
-  ) => {
-
+  const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
-
     try {
-
       setLoading(true);
-
       setError("");
 
-      /* LOGIN SESUAI BACKEND */
-      const response =
-        await api.post(
-          "/api/auth/login",
-          {
-            ...(identifier.includes("@")
-              ? {
-                  email:
-                    identifier,
-                }
-              : {
-                  nickname:
-                    identifier,
-                }),
+      const response = await heyApi.adminLogin({
+        ...(identifier.includes("@")
+          ? { email: identifier }
+          : { nickname: identifier }),
+        password,
+      });
 
-            password,
-          }
-        );
+      const accessToken = response.data.data.accessToken;
+      const decoded = jwtDecode<DecodedToken>(accessToken);
 
-      console.log(
-        "LOGIN RESPONSE:",
-        response.data
-      );
-
-      /* TOKEN */
-      const accessToken =
-        response.data.data
-          .accessToken;
-
-      /* DECODE TOKEN */
-      const decoded =
-        jwtDecode<DecodedToken>(
-          accessToken
-        );
-
-      console.log(
-        "DECODED TOKEN:",
-        decoded
-      );
-
-      /* VALIDASI ROLE */
-      if (
-        decoded.role !==
-        "admin"
-      ) {
-
-        setError(
-          "Akun ini bukan admin."
-        );
-
+      if (decoded.role !== "admin") {
+        setError("Akun ini bukan admin.");
         return;
       }
 
-      /* SAVE TOKEN */
-      Cookies.set(
-        "admin_token",
-        accessToken,
-        {
-          expires: 1,
-        }
-      );
+      Cookies.set("admin_token", accessToken, { expires: 1 });
+      localStorage.setItem("admin_data", JSON.stringify({
+        id: decoded.id,
+        role: decoded.role,
+        identifier,
+      }));
 
-      /* SAVE ADMIN DATA */
-      localStorage.setItem(
-        "admin_data",
-        JSON.stringify({
-          id: decoded.id,
-          role: decoded.role,
-          identifier,
-        })
-      );
-
-      /* REDIRECT */
-      router.push(
-        "/admin/dashboard"
-      );
-
+      router.push("/admin/dashboard");
     } catch (err: any) {
-
-      console.log(
-        "LOGIN ERROR:"
-      );
-
-      console.log(err);
-
-      console.log(
-        "STATUS:"
-      );
-
-      console.log(
-        err.response?.status
-      );
-
-      console.log(
-        "DATA:"
-      );
-
-      console.log(
-        err.response?.data
-      );
-
-      setError(
-        err?.response?.data
-          ?.message ||
-          "Login admin gagal"
-      );
-
+      setError(err?.response?.data?.message || "Login admin gagal.");
     } finally {
-
       setLoading(false);
-
     }
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-[#F5F5F5] px-4">
-
-      <div className="w-full max-w-[420px] bg-[#FFFAF9] p-8 rounded-2xl shadow-lg">
-
-        {/* TITLE */}
-        <h1 className="text-3xl font-heading font-bold text-center mb-3">
+    <div className="min-h-screen flex items-center justify-center bg-[#F5F5F5] px-4 font-sans">
+      <div className="w-full max-w-[420px] bg-[#FFFAF9] p-8 rounded-[32px] shadow-lg border border-gray-100">
+        
+        <h1 className="text-3xl font-bold text-center mb-2 text-[#06322b]">
           Log in Admin
         </h1>
 
-        {/* DESC */}
-        <p className="text-black text-[14px] mb-6">
-          Please enter your email or username and password to log in to your account.
+        <p className="text-gray-500 text-[14px] text-center mb-8">
+          Silakan masukkan kredensial admin anda.
         </p>
 
-        {/* FORM */}
-        <form
-          onSubmit={handleLogin}
-        >
-
+        <form onSubmit={handleLogin} className="space-y-5">
           {/* EMAIL / USERNAME */}
-          <div className="mb-4">
-
-            <label className="block mb-1 text-lg font-bold">
+          <div className="space-y-2">
+            <label className="block text-sm font-bold text-[#1A3C34] ml-1">
               Email / Username
             </label>
-
             <input
               type="text"
-              placeholder="admin@kosongin.com / superadmin"
-              className={`w-full border-2 p-3 rounded-lg outline-none ${
-                error
-                  ? "border-red-400"
-                  : "border-black"
-              }`}
+              placeholder="Username admin"
+              className="w-full border-2 border-gray-200 p-4 rounded-2xl outline-none focus:border-[#90BAB7]"
               value={identifier}
-              onChange={(e) =>
-                setIdentifier(
-                  e.target.value
-                )
-              }
+              onChange={(e) => setIdentifier(e.target.value)}
               required
             />
-
-            {error && (
-              <p className="text-red-500 text-sm mt-1 font-semibold">
-                Email / Username atau password salah.
-              </p>
-            )}
-
           </div>
 
-          {/* PASSWORD */}
-          <div className="mb-4">
-
-            <label className="block mb-1 text-lg font-bold">
+          {/* PASSWORD DENGAN FITUR SHOW/HIDE */}
+          <div className="space-y-2">
+            <label className="block text-sm font-bold text-[#1A3C34] ml-1">
               Password
             </label>
-
-            <input
-              type="password"
-              placeholder="Password"
-              className={`w-full border-2 p-3 rounded-lg outline-none ${
-                error
-                  ? "border-red-400"
-                  : "border-black"
-              }`}
-              value={password}
-              onChange={(e) =>
-                setPassword(
-                  e.target.value
-                )
-              }
-              required
-            />
-
-            {error && (
-              <p className="text-red-500 text-sm mt-1 font-semibold">
-                Format password tidak valid. Coba periksa kembali.
-              </p>
-            )}
-
-          </div>
-
-          {/* REMEMBER ME */}
-          <div className="flex items-center justify-between mb-6">
-
-            <label className="flex items-center gap-2 text-sm font-bold text-black">
-
+            <div className="relative">
               <input
-                type="checkbox"
-                className="w-4 h-4"
+                type={showPassword ? "text" : "password"} // Ganti type dinamis
+                placeholder="••••••••"
+                className="w-full border-2 border-gray-200 p-4 rounded-2xl outline-none focus:border-[#90BAB7] pr-12"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                required
               />
-
-              Remember me
-
-            </label>
-
-            <button
-              type="button"
-              className="text-sm font-bold text-black underline"
-            >
-              Forgot Password?
-            </button>
-
+              {/* Button Mata */}
+              <button
+                type="button"
+                onClick={() => setShowPassword(!showPassword)}
+                className="absolute right-4 top-1/2 -translate-y-1/2 text-gray-400 hover:text-[#1A3C34] transition-colors"
+              >
+                {showPassword ? <EyeOff size={20} /> : <Eye size={20} />}
+              </button>
+            </div>
           </div>
 
-          {/* ERROR */}
           {error && (
-
-            <div className="bg-red-100 text-red-600 text-sm p-3 rounded-lg mb-4">
-
+            <div className="bg-red-50 border border-red-200 text-red-600 text-xs font-bold p-4 rounded-xl">
               {error}
-
             </div>
-
           )}
 
-          {/* BUTTON */}
           <button
             type="submit"
             disabled={loading}
-            className="w-full bg-[#90BAB7] hover:bg-[#7DA7A4] text-black p-4 rounded-lg font-bold text-xl transition-all"
+            className="w-full bg-[#90BAB7] hover:bg-[#7DA7A4] text-white p-4 rounded-2xl font-bold text-lg transition-all active:scale-95 shadow-md"
           >
-
-            {loading
-              ? "Loading..."
-              : "Log in"}
-
+            {loading ? "Sedang Masuk..." : "Log in"}
           </button>
-
         </form>
-
       </div>
-
-      {/* LOGIN USER */}
-      <div className="absolute bottom-6 right-6">
-
-        <button
-          onClick={() =>
-            router.push("/login")
-          }
-          className="text-sm font-bold text-[#032119] underline"
-        >
-          Log in sebagai User
-        </button>
-
-      </div>
-
     </div>
   );
 }

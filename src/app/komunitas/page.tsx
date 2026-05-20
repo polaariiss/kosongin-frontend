@@ -105,7 +105,7 @@ export default function CommunityPage() {
                   ) : (
                     <Button 
                       onClick={() => handleJoin(selectedChallenge.id)}
-                      className="w-full py-7 rounded-xl bg-[#9bbab1] hover:bg-[#8aa79e] text-[#1a3c34] font-bold text-lg border-none shadow-sm"
+                      className="w-full py-7 rounded-xl bg-[#9bbab1] hover:bg-[#8aa79e] text-white font-bold text-lg border-none shadow-sm"
                     >
                       Ikuti Challenge
                     </Button>
@@ -144,7 +144,7 @@ function ChallengeCard({ data, isJoined, onClick }: any) {
         </div>
 
         <div className={`w-full py-3 rounded-xl font-bold text-[10px] flex items-center justify-center ${
-          isJoined ? "bg-[#EDEAE8] text-gray-600" : "bg-[#5E8B7E] text-[#032119]"
+          isJoined ? "bg-[#EDEAE8] text-gray-600" : "bg-[#5E8B7E] text-white"
         }`}>
           {isJoined ? "Lihat detail" : "Ikuti Challenge"} <ArrowRight className="w-3.5 h-3.5 ml-2" />
         </div>
