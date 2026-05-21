@@ -7,7 +7,8 @@ import {
 
 import Cookies from "js-cookie";
 
-import api from "@/services/api";
+import adminApi from "@/services/adminApi";
+const api = adminApi;
 
 export default function ChallengeSection() {
 

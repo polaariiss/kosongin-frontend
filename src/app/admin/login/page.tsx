@@ -2,6 +2,8 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
+import Link from "next/link";
+import Navbar from "@/components/section/Navbar";
 import Cookies from "js-cookie";
 import heyApi from "@/services/heyApi";
 import { jwtDecode } from "jwt-decode";
@@ -58,7 +60,9 @@ export default function AdminLoginPage() {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-[#F5F5F5] px-4 font-sans">
+    <>
+      <Navbar />
+      <div className="min-h-screen flex items-center justify-center bg-[#F5F5F5] px-4 font-sans">
       <div className="w-full max-w-[420px] bg-[#FFFAF9] p-8 rounded-[32px] shadow-lg border border-gray-100">
         
         <h1 className="text-3xl font-bold text-center mb-2 text-[#06322b]">
@@ -124,7 +128,16 @@ export default function AdminLoginPage() {
             {loading ? "Sedang Masuk..." : "Log in"}
           </button>
         </form>
+        <div className="flex items-center justify-between mt-8 px-1">
+          <div className="text-[11px] text-gray-600"></div>
+          <Link href="/login" title="Log in sebagai User">
+            <button className="text-[11px] font-bold underline text-black hover:text-[#568F87] transition-colors">
+              Login sebagai User
+            </button>
+          </Link>
+        </div>
       </div>
     </div>
+    </>
   );
 }
