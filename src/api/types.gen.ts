@@ -19,7 +19,7 @@ export type RegisterRequest = {
     fullname: string;
     email: string;
     password: string;
-    password_confirm: string;
+    passwordConfirmation: string;
 };
 
 export type LoginRequest = {
@@ -91,54 +91,71 @@ export type Challenge = {
     fullDescription?: string;
     rules?: string;
     howTo?: string;
-    challengesCategory?: string;
+    challengesCategory?: 'Zero Waste' | 'No Impulse Buy' | 'Eco Eating' | 'SecondHand' | 'LowSpend';
     imageUrl?: string;
     durationDays?: number;
     startDate?: string;
     endDate?: string;
-    status?: string;
+    status?: 'active' | 'inactive';
     createdAt?: string;
     updatedAt?: string;
+    participantCount?: number;
+};
+
+export type CreateChallengeRequest = {
+    title: string;
+    description: string;
+    fullDescription: string;
+    rules?: string;
+    howTo?: string;
+    challengesCategory: 'Zero Waste' | 'No Impulse Buy' | 'Eco Eating' | 'SecondHand' | 'LowSpend';
+    imageUrl?: string;
+    durationDays?: number;
+    startDate?: string;
+    endDate?: string;
+    status?: 'active' | 'inactive';
 };
 
 export type UserChallenge = {
-    id?: string;
-    userId?: string;
     challengeId?: string;
+    title?: string;
     joinedAt?: string;
     progress?: number;
-    updatedAt?: string;
 };
 
 export type AdminOverview = {
-    total_users?: number;
-    total_consumption_logs?: number;
-    total_cancelled_impulse?: number;
-    total_active_challenges?: number;
+    totalUsers?: number;
+    totalConsumptionLogs?: number;
+    totalCancelledImpulse?: number;
+    totalActiveChallenges?: number;
 };
 
 export type AdminUserList = {
-    data?: Array<User>;
-    meta?: {
-        page?: number;
-        limit?: number;
-        total?: number;
-        totalPages?: number;
-        next?: number | null;
-        prev?: number | null;
+    success?: boolean;
+    message?: string;
+    data?: {
+        data?: Array<User>;
+        meta?: {
+            page?: number;
+            limit?: number;
+            total?: number;
+            totalPages?: number;
+            next?: number | null;
+            prev?: number | null;
+        };
     };
 };
 
 export type AdminMonitoring = {
-    daily_active_users?: Array<{
+    dailyActiveUsers?: Array<{
         date?: string;
         totalActiveUsers?: number;
     }>;
-    daily_logs?: Array<{
+    dailyLogs?: Array<{
         date?: string;
         totalItems?: number;
     }>;
-    top_challenges?: Array<{
+    topChallenges?: Array<{
         challengeTitle?: string;
         totalParticipants?: number;
     }>;
@@ -197,6 +214,7 @@ export type PostAuthRegisterResponses = {
      * Register berhasil
      */
     201: {
+        success?: boolean;
         message?: string;
         data?: {
             id?: string;
@@ -728,6 +746,26 @@ export type GetChallengeMeResponses = {
 
 export type GetChallengeMeResponse = GetChallengeMeResponses[keyof GetChallengeMeResponses];
 
+export type GetChallengeLandingPageChallengeData = {
+    body?: never;
+    path?: never;
+    query?: never;
+    url: '/challenge/landing-page-challenge';
+};
+
+export type GetChallengeLandingPageChallengeResponses = {
+    /**
+     * Berhasil mengambil 5 challenge terpopuler
+     */
+    200: {
+        success?: boolean;
+        message?: string;
+        data?: Array<Challenge>;
+    };
+};
+
+export type GetChallengeLandingPageChallengeResponse = GetChallengeLandingPageChallengeResponses[keyof GetChallengeLandingPageChallengeResponses];
+
 export type GetChallengeByIdData = {
     body?: never;
     path: {
@@ -738,10 +776,6 @@ export type GetChallengeByIdData = {
 };
 
 export type GetChallengeByIdErrors = {
-    /**
-     * Unauthorized
-     */
-    401: ErrorResponse;
     /**
      * Challenge tidak ditemukan
      */
@@ -798,6 +832,33 @@ export type PostChallengeByIdJoinResponses = {
 
 export type PostChallengeByIdJoinResponse = PostChallengeByIdJoinResponses[keyof PostChallengeByIdJoinResponses];
 
+export type GetChallengeByIdParticipantsData = {
+    body?: never;
+    path: {
+        id: string;
+    };
+    query?: never;
+    url: '/challenge/{id}/participants';
+};
+
+export type GetChallengeByIdParticipantsResponses = {
+    /**
+     * Berhasil mengambil daftar peserta
+     */
+    200: {
+        success?: boolean;
+        message?: string;
+        data?: Array<{
+            id?: string;
+            nickName?: string;
+            fullName?: string;
+            joinedAt?: string;
+        }>;
+    };
+};
+
+export type GetChallengeByIdParticipantsResponse = GetChallengeByIdParticipantsResponses[keyof GetChallengeByIdParticipantsResponses];
+
 export type PostUploadSignatureData = {
     body: {
         folderType?: 'consumption' | 'challenge';
@@ -824,6 +885,83 @@ export type PostUploadSignatureResponses = {
 };
 
 export type PostUploadSignatureResponse = PostUploadSignatureResponses[keyof PostUploadSignatureResponses];
+
+export type PostHelperAdminCreateData = {
+    body: {
+        nickname: string;
+        fullname: string;
+        email: string;
+        password: string;
+        passwordConfirmation: string;
+        specialCode: number;
+    };
+    path?: never;
+    query?: never;
+    url: '/helper/admin/create';
+};
+
+export type PostHelperAdminCreateErrors = {
+    /**
+     * Special code salah
+     */
+    403: unknown;
+};
+
+export type PostHelperAdminCreateResponses = {
+    /**
+     * Admin berhasil dibuat
+     */
+    201: unknown;
+};
+
+export type PostHelperUsersCreateData = {
+    body: {
+        fullName?: string;
+        nickName?: string;
+        email?: string;
+        password?: string;
+    };
+    path?: never;
+    query?: never;
+    url: '/helper/users/create';
+};
+
+export type PostHelperUsersCreateResponses = {
+    /**
+     * User berhasil dibuat
+     */
+    201: unknown;
+};
+
+export type GetHelperUsersGetAllData = {
+    body?: never;
+    path?: never;
+    query?: never;
+    url: '/helper/users/get/all';
+};
+
+export type GetHelperUsersGetAllResponses = {
+    /**
+     * Daftar user berhasil diambil
+     */
+    200: unknown;
+};
+
+export type GetHelperUsersGetByIdData = {
+    body?: never;
+    path: {
+        id: string;
+    };
+    query?: never;
+    url: '/helper/users/get/{id}';
+};
+
+export type GetHelperUsersGetByIdResponses = {
+    /**
+     * User berhasil diambil
+     */
+    200: unknown;
+};
 
 export type GetAdminStatsData = {
     body?: never;
@@ -980,7 +1118,7 @@ export type GetAdminChallengesResponses = {
 export type GetAdminChallengesResponse = GetAdminChallengesResponses[keyof GetAdminChallengesResponses];
 
 export type PostAdminChallengesData = {
-    body?: never;
+    body: CreateChallengeRequest;
     path?: never;
     query?: never;
     url: '/admin/challenges';
@@ -1048,7 +1186,7 @@ export type DeleteAdminChallengesByIdResponses = {
 export type DeleteAdminChallengesByIdResponse = DeleteAdminChallengesByIdResponses[keyof DeleteAdminChallengesByIdResponses];
 
 export type PutAdminChallengesByIdData = {
-    body?: never;
+    body: CreateChallengeRequest;
     path: {
         id: string;
     };

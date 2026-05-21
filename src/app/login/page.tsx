@@ -8,67 +8,74 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useState, useEffect } from "react";
 import { Eye, EyeOff } from "lucide-react";
+import { postAuthLogin } from "@/api";
+import Cookies from "js-cookie";
 
 export default function LoginPage() {
   const router = useRouter();
   
-  const [email, setEmail] = useState("");
+  const [identifier, setIdentifier] = useState("");
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
-  const [errors, setErrors] = useState({ email: "", password: "" });
+  const [errors, setErrors] = useState({ identifier: "", password: "" });
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
-    localStorage.removeItem("user_session");
+    // Clear old session
+    Cookies.remove("accessToken");
+    Cookies.remove("refreshToken");
+    localStorage.removeItem("user_name");
   }, []);
 
-  // Fungsi Login Cepat sebagai Admin (Sesuai Desain Figma)
-  const handleAdminQuickLogin = () => {
-    setEmail("admin@kosongin.com");
-    setPassword("password123");
-    // Opsional: Langsung trigger login setelah set state
-    // Namun lebih baik user klik tombol 'Log in' secara manual agar flow terlihat natural
-  };
-
-  const handleLogin = (e: React.FormEvent) => {
+  const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
     
     let hasError = false;
-    const newErrors = { email: "", password: "" };
+    const newErrors = { identifier: "", password: "" };
 
-    const registeredEmail = localStorage.getItem("user_email");
-    const registeredPassword = localStorage.getItem("user_password");
-    
-    // Akun Admin Dummy
-    const adminEmail = "admin@kosongin.com";
-    const adminPassword = "password123";
-
-    // Validasi Email
-    if (!email) {
-      newErrors.email = "Email wajib diisi.";
-      hasError = true;
-    } else if (email !== registeredEmail && email !== adminEmail) {
-      newErrors.email = "Akun tidak ditemukan.";
+    if (!identifier) {
+      newErrors.identifier = "Email atau Nickname wajib diisi.";
       hasError = true;
     }
 
-    // Validasi Password
     if (!password) {
       newErrors.password = "Password wajib diisi.";
       hasError = true;
-    } else {
-      const targetPass = email === adminEmail ? adminPassword : registeredPassword;
-      if (password !== targetPass) {
-        newErrors.password = "Password salah.";
-        hasError = true;
-      }
     }
 
     if (hasError) {
       setErrors(newErrors);
-    } else {
-      if (email === adminEmail) localStorage.setItem("user_name", "Admin Kosongin");
-      localStorage.setItem("user_session", "true");
-      router.push("/dashboard"); 
+      return;
+    }
+
+    setLoading(true);
+    try {
+      const isEmail = identifier.includes("@");
+      const payload = {
+        password,
+        [isEmail ? "email" : "nickname"]: identifier,
+      };
+
+      const response = await postAuthLogin({
+        body: payload
+      });
+
+      if (response.data && response.data.success) {
+        const { accessToken, refreshToken } = response.data.data || {};
+        if (accessToken) {
+          Cookies.set("accessToken", accessToken, { expires: 1/96 }); // 15 mins
+          Cookies.set("refreshToken", refreshToken || "", { expires: 7 });
+          
+          // You might want to decode the token to get role, but for now redirect to dashboard
+          router.push("/dashboard");
+        }
+      }
+    } catch (error: any) {
+      console.error("Login error:", error);
+      const message = error.response?.data?.message || "Login gagal. Periksa kembali kredensial Anda.";
+      alert(message);
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -87,14 +94,14 @@ export default function LoginPage() {
 
           <form onSubmit={handleLogin} className="space-y-6">
             <div className="space-y-2 text-left">
-              <label className="text-sm font-bold ml-1 text-[#1A3C34]">Email/Username</label>
+              <label className="text-sm font-bold ml-1 text-[#1A3C34]">Email/Nickname</label>
               <Input 
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                placeholder="example@mail.com" 
-                className={`rounded-xl py-6 ${errors.email ? "border-red-500" : "border-gray-300"}`}
+                value={identifier}
+                onChange={(e) => setIdentifier(e.target.value)}
+                placeholder="example@mail.com or nickname" 
+                className={`rounded-xl py-6 ${errors.identifier ? "border-red-500" : "border-gray-300"}`}
               />
-              {errors.email && <p className="text-red-500 text-[10px] italic">{errors.email}</p>}
+              {errors.identifier && <p className="text-red-500 text-[10px] italic">{errors.identifier}</p>}
             </div>
             
             <div className="space-y-2 text-left">
@@ -124,28 +131,29 @@ export default function LoginPage() {
               </Link>
             </div>
 
-            <Button type="submit" className="w-full bg-[#9bbab1] hover:bg-[#8aa79e] text-white font-bold py-7 rounded-xl text-lg border-none shadow-sm">
-              Log in
+            <Button 
+              type="submit" 
+              disabled={loading}
+              className="w-full bg-[#9bbab1] hover:bg-[#8aa79e] text-white font-bold py-7 rounded-xl text-lg border-none shadow-sm"
+            >
+              {loading ? "Logging in..." : "Log in"}
             </Button>
           </form>
 
           {/* FOOTER LOGIN (SESUAI FIGMA) */}
-          <div className="flex items-center justify-between mt-8 px-1">
-            <p className="text-[11px] text-gray-600">
+          <div className="text-center mt-8">
+            <p className="text-sm text-gray-600">
               Belum punya akun?{" "}
-              <Link href="/register" className="font-bold underline text-black">
+              <Link href="/register" className="font-bold underline text-[#568F87] hover:opacity-80">
                 Daftar
               </Link>
             </p>
             
-            <Link href="/admin/login" title="Log in sebagai Admin">
-              <button 
-                onClick={handleAdminQuickLogin}
-                className="text-[11px] font-bold underline text-black hover:text-[#568F87] transition-colors"
-              >
+            <div className="mt-4">
+              <Link href="/admin/login" title="Log in sebagai Admin" className="text-[11px] font-bold underline text-black hover:text-[#568F87] transition-colors">
                 Log in sebagai Admin
-              </button>
-            </Link>
+              </Link>
+            </div>
           </div>
         </Card>
       </main>

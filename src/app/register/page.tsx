@@ -7,6 +7,7 @@ import { Card } from "@/components/ui/card";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
+import { postAuthRegister } from "@/api";
 // Import icons
 import { Eye, EyeOff } from "lucide-react";
 
@@ -14,31 +15,42 @@ export default function RegisterPage() {
   const router = useRouter();
 
   const [formData, setFormData] = useState({
-    name: "",
+    nickname: "",
+    fullname: "",
     email: "",
     password: "",
-    confirmPassword: ""
+    passwordConfirmation: ""
   });
 
   const [errors, setErrors] = useState({
-    name: "",
+    nickname: "",
+    fullname: "",
     email: "",
     password: "",
-    confirmPassword: ""
+    passwordConfirmation: ""
   });
 
   // State untuk toggle lihat password
   const [showPass, setShowPass] = useState(false);
   const [showConfirmPass, setShowConfirmPass] = useState(false);
+  const [loading, setLoading] = useState(false);
 
-  const handleRegister = (e: React.FormEvent) => {
+  const handleRegister = async (e: React.FormEvent) => {
     e.preventDefault();
     
     let hasError = false;
-    const newErrors = { name: "", email: "", password: "", confirmPassword: "" };
+    const newErrors = { nickname: "", fullname: "", email: "", password: "", passwordConfirmation: "" };
 
-    if (formData.name.length < 2) {
-      newErrors.name = "Nama lengkap harus diisi.";
+    if (formData.nickname.length < 3) {
+      newErrors.nickname = "Nickname minimal 3 karakter.";
+      hasError = true;
+    } else if (!/^[a-zA-Z0-9_]+$/.test(formData.nickname)) {
+      newErrors.nickname = "Nickname hanya boleh berisi huruf, angka, dan underscore.";
+      hasError = true;
+    }
+
+    if (formData.fullname.length < 2) {
+      newErrors.fullname = "Nama lengkap harus diisi.";
       hasError = true;
     }
 
@@ -47,26 +59,36 @@ export default function RegisterPage() {
       hasError = true;
     }
 
-    if (formData.password.length < 6) {
-      newErrors.password = "Password minimal 6 karakter.";
+    if (formData.password.length < 8) {
+      newErrors.password = "Password minimal 8 karakter.";
       hasError = true;
     }
 
-    if (formData.password !== formData.confirmPassword) {
-      newErrors.confirmPassword = "Konfirmasi password tidak cocok.";
+    if (formData.password !== formData.passwordConfirmation) {
+      newErrors.passwordConfirmation = "Konfirmasi password tidak cocok.";
       hasError = true;
     }
 
     if (hasError) {
       setErrors(newErrors);
-    } else {
-      // FIX: Sekarang password ikut disimpan agar bisa login
-      localStorage.setItem("user_name", formData.name);
-      localStorage.setItem("user_email", formData.email);
-      localStorage.setItem("user_password", formData.password); 
-      
-      localStorage.setItem("user_session", "true");
-      router.push("/dashboard");
+      return;
+    }
+
+    setLoading(true);
+    try {
+      const response = await postAuthRegister({
+        body: formData
+      });
+
+      if (response.data) {
+        router.push("/login");
+      }
+    } catch (error: any) {
+      console.error("Register error:", error);
+      const message = error.response?.data?.message || "Registrasi gagal. Silakan coba lagi.";
+      alert(message);
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -84,16 +106,28 @@ export default function RegisterPage() {
           </div>
 
           <form onSubmit={handleRegister} className="space-y-5">
+            {/* Nickname */}
+            <div className="space-y-2 text-left">
+              <label className="text-sm font-bold ml-1 text-[#1A3C34]">Nickname</label>
+              <Input 
+                value={formData.nickname}
+                onChange={(e) => setFormData({...formData, nickname: e.target.value})}
+                placeholder="ikmal_123" 
+                className={`rounded-xl py-6 ${errors.nickname ? "border-red-500 bg-red-50/30" : "border-gray-300 focus:border-[#568F87]"}`}
+              />
+              {errors.nickname && <p className="text-red-500 text-[10px] mt-1 ml-1 italic font-medium">{errors.nickname}</p>}
+            </div>
+
             {/* Nama Lengkap */}
             <div className="space-y-2 text-left">
               <label className="text-sm font-bold ml-1 text-[#1A3C34]">Nama Lengkap</label>
               <Input 
-                value={formData.name}
-                onChange={(e) => setFormData({...formData, name: e.target.value})}
-                placeholder="Your Name" 
-                className={`rounded-xl py-6 ${errors.name ? "border-red-500 bg-red-50/30" : "border-gray-300 focus:border-[#568F87]"}`}
+                value={formData.fullname}
+                onChange={(e) => setFormData({...formData, fullname: e.target.value})}
+                placeholder="Ikmal" 
+                className={`rounded-xl py-6 ${errors.fullname ? "border-red-500 bg-red-50/30" : "border-gray-300 focus:border-[#568F87]"}`}
               />
-              {errors.name && <p className="text-red-500 text-[10px] mt-1 ml-1 italic font-medium">{errors.name}</p>}
+              {errors.fullname && <p className="text-red-500 text-[10px] mt-1 ml-1 italic font-medium">{errors.fullname}</p>}
             </div>
 
             {/* Email */}
@@ -103,7 +137,7 @@ export default function RegisterPage() {
                 value={formData.email}
                 onChange={(e) => setFormData({...formData, email: e.target.value})}
                 type="email" 
-                placeholder="example@gmail.com" 
+                placeholder="ikmal@email.com" 
                 className={`rounded-xl py-6 ${errors.email ? "border-red-500 bg-red-50/30" : "border-gray-300 focus:border-[#568F87]"}`}
               />
               {errors.email && <p className="text-red-500 text-[10px] mt-1 ml-1 italic font-medium">{errors.email}</p>}
@@ -136,11 +170,11 @@ export default function RegisterPage() {
               <label className="text-sm font-bold ml-1 text-[#1A3C34]">Konfirmasi Password</label>
               <div className="relative">
                 <Input 
-                  value={formData.confirmPassword}
-                  onChange={(e) => setFormData({...formData, confirmPassword: e.target.value})}
+                  value={formData.passwordConfirmation}
+                  onChange={(e) => setFormData({...formData, passwordConfirmation: e.target.value})}
                   type={showConfirmPass ? "text" : "password"} 
                   placeholder="••••••••" 
-                  className={`rounded-xl py-6 pr-12 ${errors.confirmPassword ? "border-red-500 bg-red-50/30" : "border-gray-300 focus:border-[#568F87]"}`}
+                  className={`rounded-xl py-6 pr-12 ${errors.passwordConfirmation ? "border-red-500 bg-red-50/30" : "border-gray-300 focus:border-[#568F87]"}`}
                 />
                 <button
                   type="button"
@@ -150,7 +184,7 @@ export default function RegisterPage() {
                   {showConfirmPass ? <EyeOff size={20} /> : <Eye size={20} />}
                 </button>
               </div>
-              {errors.confirmPassword && <p className="text-red-500 text-[10px] mt-1 ml-1 italic font-medium">{errors.confirmPassword}</p>}
+              {errors.passwordConfirmation && <p className="text-red-500 text-[10px] mt-1 ml-1 italic font-medium">{errors.passwordConfirmation}</p>}
             </div>
 
             {/* Checkbox Section */}
@@ -167,9 +201,10 @@ export default function RegisterPage() {
 
             <Button 
               type="submit" 
+              disabled={loading}
               className="w-full bg-[#568F87] hover:bg-[#4a7a73] text-white font-bold py-7 rounded-xl text-lg transition-all active:scale-95 shadow-md border-none"
             >
-              Register
+              {loading ? "Registering..." : "Register"}
             </Button>
           </form>
 

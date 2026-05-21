@@ -2,7 +2,7 @@
 
 import type { Client, Options as Options2, TDataShape } from './client';
 import { client } from './client.gen';
-import type { DeleteAdminChallengesByIdData, DeleteAdminChallengesByIdErrors, DeleteAdminChallengesByIdResponses, DeleteConsumptionLogsByIdData, DeleteConsumptionLogsByIdErrors, DeleteConsumptionLogsByIdResponses, GetAdminChallengesData, GetAdminChallengesErrors, GetAdminChallengesResponses, GetAdminMonitoringData, GetAdminMonitoringErrors, GetAdminMonitoringResponses, GetAdminStatsData, GetAdminStatsErrors, GetAdminStatsResponses, GetAdminUsersData, GetAdminUsersErrors, GetAdminUsersExportData, GetAdminUsersExportErrors, GetAdminUsersExportResponses, GetAdminUsersResponses, GetChallengeByIdData, GetChallengeByIdErrors, GetChallengeByIdResponses, GetChallengeData, GetChallengeErrors, GetChallengeMeData, GetChallengeMeErrors, GetChallengeMeResponses, GetChallengeResponses, GetConsumptionLogsData, GetConsumptionLogsErrors, GetConsumptionLogsResponses, GetDashboardInsightData, GetDashboardInsightErrors, GetDashboardInsightResponses, GetProfileData, GetProfileErrors, GetProfileResponses, GetWishlistData, GetWishlistErrors, GetWishlistResponses, PatchProfileReminderSettingsData, PatchProfileReminderSettingsErrors, PatchProfileReminderSettingsResponses, PatchWishlistByIdData, PatchWishlistByIdErrors, PatchWishlistByIdResponses, PostAdminChallengesData, PostAdminChallengesErrors, PostAdminChallengesResponses, PostAuthForgotPasswordData, PostAuthForgotPasswordResponses, PostAuthLoginData, PostAuthLoginErrors, PostAuthLoginResponses, PostAuthLogoutData, PostAuthLogoutErrors, PostAuthLogoutResponses, PostAuthRefreshData, PostAuthRefreshErrors, PostAuthRefreshResponses, PostAuthRegisterData, PostAuthRegisterErrors, PostAuthRegisterResponses, PostAuthResetPasswordData, PostAuthResetPasswordResponses, PostChallengeByIdJoinData, PostChallengeByIdJoinErrors, PostChallengeByIdJoinResponses, PostConsumptionLogsData, PostConsumptionLogsErrors, PostConsumptionLogsResponses, PostUploadSignatureData, PostUploadSignatureResponses, PostWishlistData, PostWishlistErrors, PostWishlistResponses, PutAdminChallengesByIdData, PutAdminChallengesByIdErrors, PutAdminChallengesByIdResponses, PutConsumptionLogsByIdData, PutConsumptionLogsByIdErrors, PutConsumptionLogsByIdResponses } from './types.gen';
+import type { DeleteAdminChallengesByIdData, DeleteAdminChallengesByIdErrors, DeleteAdminChallengesByIdResponses, DeleteConsumptionLogsByIdData, DeleteConsumptionLogsByIdErrors, DeleteConsumptionLogsByIdResponses, GetAdminChallengesData, GetAdminChallengesErrors, GetAdminChallengesResponses, GetAdminMonitoringData, GetAdminMonitoringErrors, GetAdminMonitoringResponses, GetAdminStatsData, GetAdminStatsErrors, GetAdminStatsResponses, GetAdminUsersData, GetAdminUsersErrors, GetAdminUsersExportData, GetAdminUsersExportErrors, GetAdminUsersExportResponses, GetAdminUsersResponses, GetChallengeByIdData, GetChallengeByIdErrors, GetChallengeByIdParticipantsData, GetChallengeByIdParticipantsResponses, GetChallengeByIdResponses, GetChallengeData, GetChallengeErrors, GetChallengeLandingPageChallengeData, GetChallengeLandingPageChallengeResponses, GetChallengeMeData, GetChallengeMeErrors, GetChallengeMeResponses, GetChallengeResponses, GetConsumptionLogsData, GetConsumptionLogsErrors, GetConsumptionLogsResponses, GetDashboardInsightData, GetDashboardInsightErrors, GetDashboardInsightResponses, GetHelperUsersGetAllData, GetHelperUsersGetAllResponses, GetHelperUsersGetByIdData, GetHelperUsersGetByIdResponses, GetProfileData, GetProfileErrors, GetProfileResponses, GetWishlistData, GetWishlistErrors, GetWishlistResponses, PatchProfileReminderSettingsData, PatchProfileReminderSettingsErrors, PatchProfileReminderSettingsResponses, PatchWishlistByIdData, PatchWishlistByIdErrors, PatchWishlistByIdResponses, PostAdminChallengesData, PostAdminChallengesErrors, PostAdminChallengesResponses, PostAuthForgotPasswordData, PostAuthForgotPasswordResponses, PostAuthLoginData, PostAuthLoginErrors, PostAuthLoginResponses, PostAuthLogoutData, PostAuthLogoutErrors, PostAuthLogoutResponses, PostAuthRefreshData, PostAuthRefreshErrors, PostAuthRefreshResponses, PostAuthRegisterData, PostAuthRegisterErrors, PostAuthRegisterResponses, PostAuthResetPasswordData, PostAuthResetPasswordResponses, PostChallengeByIdJoinData, PostChallengeByIdJoinErrors, PostChallengeByIdJoinResponses, PostConsumptionLogsData, PostConsumptionLogsErrors, PostConsumptionLogsResponses, PostHelperAdminCreateData, PostHelperAdminCreateErrors, PostHelperAdminCreateResponses, PostHelperUsersCreateData, PostHelperUsersCreateResponses, PostUploadSignatureData, PostUploadSignatureResponses, PostWishlistData, PostWishlistErrors, PostWishlistResponses, PutAdminChallengesByIdData, PutAdminChallengesByIdErrors, PutAdminChallengesByIdResponses, PutConsumptionLogsByIdData, PutConsumptionLogsByIdErrors, PutConsumptionLogsByIdResponses } from './types.gen';
 
 export type Options<TData extends TDataShape = TDataShape, ThrowOnError extends boolean = boolean, TResponse = unknown> = Options2<TData, ThrowOnError, TResponse> & {
     /**
@@ -216,13 +216,14 @@ export const getChallengeMe = <ThrowOnError extends boolean = false>(options?: O
 });
 
 /**
+ * Ambil 5 challenge terpopuler untuk landing page
+ */
+export const getChallengeLandingPageChallenge = <ThrowOnError extends boolean = false>(options?: Options<GetChallengeLandingPageChallengeData, ThrowOnError>) => (options?.client ?? client).get<GetChallengeLandingPageChallengeResponses, unknown, ThrowOnError>({ url: '/challenge/landing-page-challenge', ...options });
+
+/**
  * Ambil detail challenge
  */
-export const getChallengeById = <ThrowOnError extends boolean = false>(options: Options<GetChallengeByIdData, ThrowOnError>) => (options.client ?? client).get<GetChallengeByIdResponses, GetChallengeByIdErrors, ThrowOnError>({
-    security: [{ scheme: 'bearer', type: 'http' }],
-    url: '/challenge/{id}',
-    ...options
-});
+export const getChallengeById = <ThrowOnError extends boolean = false>(options: Options<GetChallengeByIdData, ThrowOnError>) => (options.client ?? client).get<GetChallengeByIdResponses, GetChallengeByIdErrors, ThrowOnError>({ url: '/challenge/{id}', ...options });
 
 /**
  * Ikut challenge
@@ -234,9 +235,19 @@ export const postChallengeByIdJoin = <ThrowOnError extends boolean = false>(opti
 });
 
 /**
+ * Ambil daftar peserta challenge
+ */
+export const getChallengeByIdParticipants = <ThrowOnError extends boolean = false>(options: Options<GetChallengeByIdParticipantsData, ThrowOnError>) => (options.client ?? client).get<GetChallengeByIdParticipantsResponses, unknown, ThrowOnError>({
+    security: [{ scheme: 'bearer', type: 'http' }],
+    url: '/challenge/{id}/participants',
+    ...options
+});
+
+/**
  * Dapatkan signature untuk upload Cloudinary
  */
 export const postUploadSignature = <ThrowOnError extends boolean = false>(options: Options<PostUploadSignatureData, ThrowOnError>) => (options.client ?? client).post<PostUploadSignatureResponses, unknown, ThrowOnError>({
+    security: [{ scheme: 'bearer', type: 'http' }],
     url: '/upload/signature',
     ...options,
     headers: {
@@ -244,6 +255,40 @@ export const postUploadSignature = <ThrowOnError extends boolean = false>(option
         ...options.headers
     }
 });
+
+/**
+ * Buat akun admin baru (menggunakan special code)
+ */
+export const postHelperAdminCreate = <ThrowOnError extends boolean = false>(options: Options<PostHelperAdminCreateData, ThrowOnError>) => (options.client ?? client).post<PostHelperAdminCreateResponses, PostHelperAdminCreateErrors, ThrowOnError>({
+    url: '/helper/admin/create',
+    ...options,
+    headers: {
+        'Content-Type': 'application/json',
+        ...options.headers
+    }
+});
+
+/**
+ * Buat user baru (helper)
+ */
+export const postHelperUsersCreate = <ThrowOnError extends boolean = false>(options: Options<PostHelperUsersCreateData, ThrowOnError>) => (options.client ?? client).post<PostHelperUsersCreateResponses, unknown, ThrowOnError>({
+    url: '/helper/users/create',
+    ...options,
+    headers: {
+        'Content-Type': 'application/json',
+        ...options.headers
+    }
+});
+
+/**
+ * Ambil semua user (helper)
+ */
+export const getHelperUsersGetAll = <ThrowOnError extends boolean = false>(options?: Options<GetHelperUsersGetAllData, ThrowOnError>) => (options?.client ?? client).get<GetHelperUsersGetAllResponses, unknown, ThrowOnError>({ url: '/helper/users/get/all', ...options });
+
+/**
+ * Ambil user berdasarkan ID (helper)
+ */
+export const getHelperUsersGetById = <ThrowOnError extends boolean = false>(options: Options<GetHelperUsersGetByIdData, ThrowOnError>) => (options.client ?? client).get<GetHelperUsersGetByIdResponses, unknown, ThrowOnError>({ url: '/helper/users/get/{id}', ...options });
 
 /**
  * Statistik overview admin
@@ -293,10 +338,14 @@ export const getAdminChallenges = <ThrowOnError extends boolean = false>(options
 /**
  * Buat challenge baru
  */
-export const postAdminChallenges = <ThrowOnError extends boolean = false>(options?: Options<PostAdminChallengesData, ThrowOnError>) => (options?.client ?? client).post<PostAdminChallengesResponses, PostAdminChallengesErrors, ThrowOnError>({
+export const postAdminChallenges = <ThrowOnError extends boolean = false>(options: Options<PostAdminChallengesData, ThrowOnError>) => (options.client ?? client).post<PostAdminChallengesResponses, PostAdminChallengesErrors, ThrowOnError>({
     security: [{ scheme: 'bearer', type: 'http' }],
     url: '/admin/challenges',
-    ...options
+    ...options,
+    headers: {
+        'Content-Type': 'application/json',
+        ...options.headers
+    }
 });
 
 /**
@@ -314,5 +363,9 @@ export const deleteAdminChallengesById = <ThrowOnError extends boolean = false>(
 export const putAdminChallengesById = <ThrowOnError extends boolean = false>(options: Options<PutAdminChallengesByIdData, ThrowOnError>) => (options.client ?? client).put<PutAdminChallengesByIdResponses, PutAdminChallengesByIdErrors, ThrowOnError>({
     security: [{ scheme: 'bearer', type: 'http' }],
     url: '/admin/challenges/{id}',
-    ...options
+    ...options,
+    headers: {
+        'Content-Type': 'application/json',
+        ...options.headers
+    }
 });

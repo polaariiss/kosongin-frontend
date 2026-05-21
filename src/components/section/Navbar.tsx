@@ -4,8 +4,9 @@ import Image from "next/image";
 import Link from "next/link";
 import { useState, useEffect } from "react";
 import { usePathname, useRouter } from "next/navigation";
-import ProfileDropdown from "@/components/ui/profile-dropdown";
+import ProfileDropdown from "@/components/section/ProfileDropdown";
 import { Menu, X } from "lucide-react";
+import Cookies from "js-cookie";
 
 export default function Navbar() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
@@ -14,12 +15,14 @@ export default function Navbar() {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
 
   useEffect(() => {
-    const session = localStorage.getItem("user_session");
+    const token = Cookies.get("accessToken");
     const savedName = localStorage.getItem("user_name");
     
-    if (session === "true") {
+    if (token) {
       setIsLoggedIn(true);
       if (savedName) setUserName(savedName);
+    } else {
+      setIsLoggedIn(false);
     }
   }, []);
 

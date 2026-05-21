@@ -4,6 +4,7 @@ import React, { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { LogOut, Key } from "lucide-react";
 import { Card } from "@/components/ui/card";
+import Cookies from "js-cookie";
 
 export default function ProfileDropdown() {
   const router = useRouter();
@@ -19,7 +20,10 @@ export default function ProfileDropdown() {
   }, []);
 
   const handleLogout = () => {
-    localStorage.removeItem("user_session");
+    Cookies.remove("accessToken");
+    Cookies.remove("refreshToken");
+    localStorage.removeItem("user_name");
+    localStorage.removeItem("user_email");
     window.location.href = "/login";
   };
 
