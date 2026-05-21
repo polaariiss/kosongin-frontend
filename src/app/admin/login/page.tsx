@@ -1,5 +1,6 @@
 "use client";
 
+import { client } from "@/lib/api-client";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
@@ -8,6 +9,9 @@ import Cookies from "js-cookie";
 import heyApi from "@/services/heyApi";
 import { jwtDecode } from "jwt-decode";
 import { Eye, EyeOff } from "lucide-react"; // Import icon mata
+
+/* HEY API */
+import { postAuthLogin } from "@/api/sdk.gen";
 
 type DecodedToken = {
   id: string;
