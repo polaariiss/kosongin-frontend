@@ -309,7 +309,7 @@ export default function ActiveChallengeSection() {
                       flex
                       items-center
                       justify-center
-                      bg-black/50
+                      bg-black/5
                       backdrop-blur-sm
                       p-4
                     ">

@@ -188,8 +188,25 @@ export default function UserSection() {
 
             <input
               type="text"
-              placeholder="Cari nama atau email pengguna..."
-              className="w-full outline-none text-sm bg-transparent"
+
+              value={search}
+
+              onChange={(e) =>
+                setSearch(
+                  e.target.value
+                )
+              }
+
+              placeholder="
+                Cari nama atau email pengguna...
+              "
+
+              className="
+                w-full
+                outline-none
+                text-sm
+                bg-transparent
+              "
             />
 
           </div>
@@ -317,7 +334,39 @@ export default function UserSection() {
           <tbody>
 
             {Array.isArray(users) &&
-              users.map((user) => (
+              users
+                .filter((user) => {
+
+                  const keyword =
+                    search.toLowerCase();
+
+                  return (
+
+                    user.fullName
+                      ?.toLowerCase()
+                      .includes(keyword)
+
+                    ||
+
+                    user.name
+                      ?.toLowerCase()
+                      .includes(keyword)
+
+                    ||
+
+                    user.email
+                      ?.toLowerCase()
+                      .includes(keyword)
+
+                    ||
+
+                    user.nickname
+                      ?.toLowerCase()
+                      .includes(keyword)
+                  );
+                })
+
+                .map((user) => (
 
                 <tr
                   key={user.id}
